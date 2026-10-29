@@ -30,3 +30,9 @@ cd scrapers
 MUNILENS_RED=1 ../.venv/bin/pytest -m red    # integración contra el portal real: CSV frente a tabla HTML
 ../.venv/bin/ruff check . && ../.venv/bin/ruff format --check .
 ```
+
+## Sondeo de varias municipalidades
+
+```bash
+scripts/sondeo_exhaustivo.sh data/exhaustivo_ubigeos.txt 2024-01 2026-10   # un ubigeo por línea; reanudable
+```

@@ -19,7 +19,7 @@ from munilens_scrapers.client import PoliteClient, RobotsDisallowedError
 from munilens_scrapers.logging_setup import setup_logging
 from munilens_scrapers.sources import pte_personal as pte
 from munilens_scrapers.storage import Extraccion, RawStore
-from munilens_scrapers.validate import ReporteCalidad, duplicados_exactos, validar
+from munilens_scrapers.validate import Hallazgo, ReporteCalidad, duplicados_exactos, validar
 
 log = logging.getLogger("munilens.extract")
 
@@ -155,6 +155,14 @@ def procesar_periodo(
     return ext, reporte
 
 
+def cargar_reporte(data_dir: Path, slug: str, periodo: str) -> ReporteCalidad | None:
+    path = data_dir / "processed" / pte.FUENTE / slug / f"{periodo}.calidad.json"
+    if not path.exists():
+        return None
+    d = json.loads(path.read_text(encoding="utf-8"))
+    return ReporteCalidad(d["periodo"], d["registros"], [Hallazgo(**h) for h in d["hallazgos"]], d["estadisticas"])
+
+
 def resumen_markdown(ent: dict, resultados: list[tuple[Extraccion, ReporteCalidad | None]]) -> str:
     lineas = [
         f"# Reporte de extracción — {ent['nombre']}",
@@ -201,6 +209,7 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument("--hasta", required=True, help="YYYY-MM")
     ap.add_argument("--data-dir", type=Path, default=Path("data"))
     ap.add_argument("--config", type=Path, default=CONFIG_DEFAULT)
+    ap.add_argument("--reanudar", action="store_true", help="omite periodos ya registrados sin error en el manifiesto")
     ap.add_argument("--intervalo", type=float, default=3.0, help="segundos mínimos entre peticiones")
     args = ap.parse_args(argv)
 
@@ -208,9 +217,14 @@ def main(argv: list[str] | None = None) -> int:
     ent = cargar_entidad(args.entidad, args.config) if args.entidad else cargar_por_ubigeo(args.ubigeo)
     client = PoliteClient(min_interval_s=args.intervalo)
     store = RawStore(args.data_dir / "raw")
-    resultados = [
-        procesar_periodo(client, store, args.data_dir, ent, a, m) for a, m in periodos(args.desde, args.hasta)
-    ]
+    previos = {e.periodo: e for e in store.historial(pte.FUENTE, ent["slug"]) if e.estado != "error"}
+    resultados = []
+    for a, m in periodos(args.desde, args.hasta):
+        periodo = f"{a:04d}-{m:02d}"
+        if args.reanudar and periodo in previos:
+            resultados.append((previos[periodo], cargar_reporte(args.data_dir, ent["slug"], periodo)))
+            continue
+        resultados.append(procesar_periodo(client, store, args.data_dir, ent, a, m))
     reporte = args.data_dir / "reports" / f"{pte.FUENTE}_{ent['slug']}_{args.desde}_{args.hasta}.md"
     reporte.parent.mkdir(parents=True, exist_ok=True)
     reporte.write_text(resumen_markdown(ent, resultados), encoding="utf-8")

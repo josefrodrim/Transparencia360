@@ -58,9 +58,13 @@ Hecho y en git:
   090307 y 090609 no tienen datos. Ascensión y Acobamba traen filas con total ≠ suma de componentes (se marcan, no se
   corrigen). `data/` es local: si se perdió, se regenera con `munilens-extract --ubigeo <u> --desde 2024-01 --hasta 2026-10`.
 
+En curso (autorizado por el usuario 2026-10-29): **sondeo exhaustivo** 2024-01→2026-10 de las 85 municipalidades
+restantes con cruce "alta" (lista en `data/exhaustivo_ubigeos.txt`, regenerable desde `database/seeds/pte_entidades_09.csv`
+excluyendo las 10 ya extraídas). Progreso en `data/logs/exhaustivo.progress`. Si se cortó, relanzar (reanuda solo):
+`scripts/sondeo_exhaustivo.sh data/exhaustivo_ubigeos.txt 2024-01 2026-10`. Al terminar: tabla de disponibilidad en
+`docs/fuentes-huancavelica.md` §3 y extracción ya queda hecha para las que tengan datos.
+
 Siguiente:
-3. Decidir con el usuario si sondear todos los meses de las ~84 municipalidades sin datos (≈3 000 peticiones;
-   requiere autorización explícita por volumen).
 4. Para las que no publican: alternativas legítimas (MEF Consulta Amigable = gasto agregado; solicitudes Ley 27806).
 5. Pendiente técnico: algunos CSV del PTE (visto en el Congreso, id 16, 2026-09) traen campos con saltos de línea sin
    comillas → filas partidas; `leer_csv` aún no lo repara.

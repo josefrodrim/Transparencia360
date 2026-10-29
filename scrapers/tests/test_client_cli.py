@@ -30,3 +30,18 @@ def test_user_agent_toma_contacto_del_entorno(monkeypatch):
     assert "contacto" not in PoliteClient(session=MagicMock(headers={})).user_agent
     monkeypatch.setenv("MUNILENS_CONTACTO", "ops@ejemplo.org")
     assert PoliteClient(session=MagicMock(headers={})).user_agent.endswith("contacto: ops@ejemplo.org)")
+
+
+def test_cargar_reporte_roundtrip(tmp_path):
+    import json
+    from dataclasses import asdict
+
+    from munilens_scrapers.cli import cargar_reporte
+    from munilens_scrapers.validate import Hallazgo, ReporteCalidad
+
+    rep = ReporteCalidad("2026-08", 2, [Hallazgo("error", "x", "m", "1")], {"suma_total": "1"})
+    d = tmp_path / "processed" / "pte_personal" / "e"
+    d.mkdir(parents=True)
+    (d / "2026-08.calidad.json").write_text(json.dumps(asdict(rep)))
+    assert cargar_reporte(tmp_path, "e", "2026-08") == rep
+    assert cargar_reporte(tmp_path, "e", "2026-09") is None
