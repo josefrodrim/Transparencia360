@@ -4,7 +4,7 @@ Leyenda: [x] hecho · [ ] pendiente
 
 ## Fase 1 — Fuentes (Huancavelica)
 - [x] Inspeccionar el PTE de la MPH: formatos, campos, robots.txt y acceso (`docs/fuentes-huancavelica.md`)
-- [ ] Directorio oficial de municipalidades y ubigeos (INEI) → `config/entidades.toml` / seed
+- [x] Directorio oficial de municipalidades y ubigeos (INEI) → `database/seeds/municipalidades.csv` (102 en Huancavelica)
 - [ ] `id_entidad` PTE de las municipalidades del departamento y disponibilidad de datos de cada una
 - [ ] Evaluar los periodos 2013–2023 de la MPH
 - [ ] Revisar las condiciones de uso de transparencia.gob.pe y Datos Abiertos

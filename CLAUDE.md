@@ -6,7 +6,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 MuniLens: plataforma de transparencia sobre el personal municipal del Perú, empezando por Huancavelica. El plan por
 fases (1. fuentes → 2. scraper piloto → 3. PostgreSQL → 4. FastAPI → 5. Next.js → ...) está en `docs/plan.md`.
-Estado actual: Fases 1 y 2 en curso. Solo existe `scrapers/`; aún no hay backend ni frontend.
+Estado actual: Fases 1 y 2 en curso. Existen `scrapers/` y `database/seeds/`; aún no hay backend ni frontend.
 
 ## Comandos
 
@@ -14,6 +14,7 @@ Entorno: `.venv` en la raíz (Python 3.12). Paquete instalado en modo editable: 
 
 ```bash
 .venv/bin/munilens-extract --entidad mp-huancavelica --desde 2024-01 --hasta 2026-10   # desde la raíz → data/
+.venv/bin/munilens-inei --url <xlsx del directorio INEI>   # → database/seeds/municipalidades.csv (+ .meta.json)
 cd scrapers && ../.venv/bin/pytest                         # unitarias
 ../.venv/bin/pytest tests/test_validate.py::test_detecta_inconsistencias   # una prueba
 MUNILENS_RED=1 ../.venv/bin/pytest -m red                  # integración contra el portal real
@@ -28,6 +29,9 @@ devuelve las filas en orden variable) → `sources/pte_personal` (`leer_csv` exi
 `FormatoInesperadoError` si cambian; `normalizar` → `RegistroPersonal` con `Decimal`) → `validate.validar`
 (`ReporteCalidad`; `duplicados_exactos` marca las re-cargas del mismo periodo) → CSV procesado + JSON de calidad +
 reporte Markdown. Cada fuente nueva va en `sources/` como módulo propio; las entidades, en `config/entidades.toml`.
+
+`sources/inei_directorio` + `cli_inei`: directorio de municipalidades del INEI (XLSX) → seed versionado
+`database/seeds/municipalidades.csv` (ubigeo como clave; sin alcalde, teléfonos ni correos).
 
 Particularidades del PTE: ver `docs/fuentes-huancavelica.md` (periodos vacíos = respuesta de 0 bytes, cargas
 duplicadas, meses idénticos, desfase de publicación).

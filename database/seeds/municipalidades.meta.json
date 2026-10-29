@@ -1,0 +1,31 @@
+{
+  "fuente": "INEI - Registro Nacional de Municipalidades (RENAMU)",
+  "pagina": "https://www.gob.pe/institucion/inei/informes-publicaciones/3364652-nation-registry-of-municipalities-renamu-2026",
+  "url_archivo": "https://cdn.www.gob.pe/uploads/document/file/3905382/3364652-directorio-nacional-de-municipalidades-provinciales-y-distritales-octubre-2026.xlsx?v=1792100463",
+  "sha256_archivo": "b9741bbcd360ecaf682dd8e297f36adadde688165be37229ecfd271bef469663",
+  "actualizado_al": "2026-10-14",
+  "municipalidades": 1893,
+  "por_tipo": {
+    "provincial": 196,
+    "distrital": 1697
+  },
+  "notas_inei": [
+    "Nota: Los nombres de los alcaldes corresponden a la información del Jurado Nacional de Elecciones al 14/10/2026.",
+    "1/ Distrito creado en diciembre del año 2022, proceso electoral por definir para elegir a las autoridades municipales. Administrador temporal (a).",
+    "2/ Distrito con nulidad electoral, el alcalde será elegido en Elecciones Complementarias.",
+    "3/ Distrito creado en julio del año 2025, proceso electoral por definir para elegir a las autoridades municipales. Administrador temporal (a).",
+    "4/ Distrito creado en julio del año 2026, proceso electoral por definir para elegir a las autoridades municipales.",
+    "Fuente: Instituto Nacional de Estadística e Informática - Registro Nacional de Municipalidades."
+  ],
+  "correcciones_aplicadas": [
+    "030612: departamento 'ApurÍmac' → 'Apurímac'",
+    "221006: departamento 'San MartÍn' → 'San Martín'"
+  ],
+  "campos_excluidos": [
+    "alcalde",
+    "sexo",
+    "dirección",
+    "teléfonos",
+    "correo electrónico"
+  ]
+}

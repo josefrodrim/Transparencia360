@@ -6,6 +6,6 @@
 slug = "mp-huancavelica"
 nombre = "Municipalidad Provincial de Huancavelica"
 tipo = "provincial"
-ubigeo = "0901"          # provincia; pendiente validar contra el listado oficial del INEI
+ubigeo = "090101"        # INEI, Directorio Nacional de Municipalidades (actualizado al 2026-10-14)
 pte_id_entidad = 980
 ruc = "20171725144"

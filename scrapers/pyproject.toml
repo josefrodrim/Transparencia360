@@ -3,13 +3,14 @@ name = "munilens-scrapers"
 version = "0.1.0"
 description = "Extractores de fuentes públicas para MuniLens"
 requires-python = ">=3.12"
-dependencies = ["requests>=2.32"]
+dependencies = ["requests>=2.32", "openpyxl>=3.1"]
 
 [project.optional-dependencies]
 dev = ["pytest>=8", "ruff>=0.6"]
 
 [project.scripts]
 munilens-extract = "munilens_scrapers.cli:main"
+munilens-inei = "munilens_scrapers.cli_inei:main"
 
 [build-system]
 requires = ["setuptools>=69"]

@@ -54,12 +54,35 @@
 - Antes de publicar fichas individualizadas hace falta una revisión de cumplimiento (Ley 29733 y su reglamento).
   Por ahora los datos solo se guardan localmente en `data/` (excluido de git).
 
-## 2. Pendientes de verificar
+## 2. INEI — Directorio Nacional de Municipalidades (VERIFICADO, en uso)
+
+| Atributo | Valor |
+|---|---|
+| Página | https://www.gob.pe/institucion/inei/informes-publicaciones/3364652-nation-registry-of-municipalities-renamu-2026 |
+| Archivo usado | "Directorio Nacional de Municipalidades Provinciales y Distritales - Octubre 2026" (XLSX), actualizado al **14/10/2026**. SHA-256 `b9741bbc…69663` |
+| robots.txt (gob.pe) | Solo prohíbe `/admin/` y `?sheet=`; la descarga desde el CDN está permitida |
+| Extractor | `munilens-inei --url <xlsx>` → `database/seeds/municipalidades.csv` + `.meta.json` |
+
+- Columnas: Ubigeo, Departamento, Provincia, Distrito, Cargo, Nombres y Apellidos del Alcalde, Sexo, Dirección, Código
+  de ciudad, Teléfonos, Correo Electrónico. **No se extraen** sexo, dirección, teléfonos ni correos (algunos son
+  personales). El nombre del alcalde (fuente: JNE) solo se guarda en `data/processed`, no en el seed versionado.
+- **Nacional:** 1 893 municipalidades (196 provinciales y 1 697 distritales).
+- **Huancavelica (ubigeo 09): 102 municipalidades**, 7 provinciales y 95 distritales: Huancavelica 19, Tayacaja 23,
+  Huaytará 16, Castrovirreyna 13, Angaraes 12, Churcampa 11, Acobamba 8. Esto supera los 94 distritos del INEI 2017
+  por la creación de distritos nuevos en Tayacaja (+7) y Churcampa (+1). Ninguna municipalidad de Huancavelica tiene
+  nota al pie.
+- Las provinciales no siempre llevan el nombre de su capital: Angaraes → Lircay (090301), Tayacaja → Pampas (090701).
+- Errores de la fuente corregidos y registrados en `.meta.json`: "ApurÍmac" (030612) y "San MartÍn" (221006). Solo se
+  unifican diferencias de mayúsculas; cualquier otra inconsistencia detiene la carga.
+- La URL del XLSX cambia en cada edición (hay versiones de agosto y diciembre de 2025, y de febrero, septiembre y
+  octubre de 2026), así que se pasa por parámetro y se guarda en el meta.
+
+## 3. Pendientes de verificar
 
 | Fuente | URL candidata | Estado |
 |---|---|---|
+| PTE — `id_entidad` de las 101 municipalidades restantes de Huancavelica | buscador de entidades del PTE | Pendiente. Ejemplo hallado: Yauli = `11910` |
 | PTE — ficha de entidad MPH | https://www.transparencia.gob.pe/enlaces/pte_transparencia_enlaces.aspx?id_entidad=980 | Accesible, sin analizar |
 | Web institucional MPH | https://www.munihuancavelica.gob.pe/es/ | Sin verificar |
-| INEI — directorio y ubigeos | — | Pendiente. Ubigeo departamento `09`, provincia `0901`. El INEI 2017 da 94 distritos (Huancavelica 19, Tayacaja 16, Huaytará 16, Castrovirreyna 13, Angaraes 12, Churcampa 10, Acobamba 8); otras fuentes dan 93, 97 o 100 |
 | Datos Abiertos | https://www.datosabiertos.gob.pe/ | No se encontró ningún dataset de planillas municipales de Huancavelica |
-| `id_entidad` PTE del resto de municipalidades | — | Pendiente. Ejemplo hallado: Yauli = `11910` |
+| INEI — población por distrito | — | Pendiente (para indicadores per cápita) |
