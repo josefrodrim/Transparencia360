@@ -54,11 +54,11 @@ Hecho y en git:
   MP Huancavelica, MD Ascensión (090118), MP Acobamba (090201), MD Caja (090204), MP Angaraes (090301),
   MD San Antonio de Antaparco (090310), MP Tayacaja (090701). El resto devolvió 0 registros en los 3 meses.
 
-En curso / siguiente (si se cortó, relanzar; el RAW es idempotente y no duplica):
-1. Extracción completa 2024-01→2026-10 de: 090118 090201 090204 090301 090310 090701 + recién cruzadas sin sondear
-   090106 090307 090609. Comando: `for u in ...; do .venv/bin/munilens-extract --ubigeo $u --desde 2024-01
-   --hasta 2026-10 2> data/logs/extract_$u.log; done`. Revisar `data/reports/pte_personal_ubigeo-*.md`.
-2. Documentar resultados en `docs/fuentes-huancavelica.md` y `docs/plan.md`.
+- Extracción completa 2024-01→2026-10 hecha para esas 7 (tabla en `docs/fuentes-huancavelica.md` §3). 090106,
+  090307 y 090609 no tienen datos. Ascensión y Acobamba traen filas con total ≠ suma de componentes (se marcan, no se
+  corrigen). `data/` es local: si se perdió, se regenera con `munilens-extract --ubigeo <u> --desde 2024-01 --hasta 2026-10`.
+
+Siguiente:
 3. Decidir con el usuario si sondear todos los meses de las ~84 municipalidades sin datos (≈3 000 peticiones;
    requiere autorización explícita por volumen).
 4. Para las que no publican: alternativas legítimas (MEF Consulta Amigable = gasto agregado; solicitudes Ley 27806).

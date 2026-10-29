@@ -77,7 +77,36 @@
 - La URL del XLSX cambia en cada edición (hay versiones de agosto y diciembre de 2025, y de febrero, septiembre y
   octubre de 2026), así que se pasa por parámetro y se guarda en el meta.
 
-## 3. Pendientes de verificar
+## 3. Cruce INEI ↔ PTE y disponibilidad de salarios (2026-10-29)
+
+- `database/seeds/pte_entidades_09.csv`: 95/102 municipalidades con `id_entidad` de confianza alta. Pendientes: Cosme
+  (090511) y los distritos nuevos de Tayacaja 090719–090723 y 090725, sin ficha identificable en el PTE.
+- Sondeo de 3 meses (2026-05, 2025-12, 2024-06) en las municipalidades cruzadas: solo 7 publicaron personal. Huachocolpa
+  (090106), Huanca-Huanca (090307) y Quito-Arma (090609) se cruzaron después; en la extracción completa no tienen datos.
+- Extracción completa 2024-01 → 2026-10 de las que publican:
+
+| Ubigeo | Municipalidad | Meses con datos (2024-01→2026-10) | Último mes | Personas (último mes) | Mediana S/ | Máximo S/ | Filas con total inconsistente |
+|---|---|---|---|---|---|---|---|
+| 090101 | Municipalidad Provincial de Huancavelica | 26 | 2026-09 | 351 | 1,864.19 | 7,280.00 | 0/10269 (0.0 %) |
+| 090118 | Municipalidad Distrital de Ascensión | 34 | 2026-10 | 49 | 2,152.07 | 4,000.00 | 132/2023 (6.5 %) |
+| 090201 | Municipalidad Provincial de Acobamba | 32 | 2026-08 | 136 | 1,425.00 | 7,500.00 | 83/4195 (2.0 %) |
+| 090204 | Municipalidad Distrital de Caja | 8 | 2026-01 | 1 | 2,060.00 | 2,060.00 | 0/13 (0.0 %) |
+| 090301 | Municipalidad Provincial de Angaraes | 4 | 2024-06 | 64 | 2,000.00 | 4,000.00 | 0/333 (0.0 %) |
+| 090310 | Municipalidad Distrital de San Antonio de Antaparco | 7 | 2026-04 | 16 | 2,100.00 | 3,605.21 | 0/104 (0.0 %) |
+| 090701 | Municipalidad Provincial de Tayacaja | 19 | 2025-07 | 8 | 6,632.10 | 18,704.42 | 0/3356 (0.0 %) |
+
+- Personas = registros únicos del último mes publicado. Los importes son los publicados (columna total) y no se
+  anualizan.
+- **Total inconsistente** (Ascensión, Acobamba): filas en las que el total no coincide con la suma de los componentes
+  (p. ej. remuneración S/ 7 200 y total S/ 3 000). Es un error de la entidad al publicar: se conserva tal cual y se marca;
+  no se elige una de las dos cifras.
+- Cobertura irregular: Angaraes solo publicó 2024-01→2024-06; Tayacaja deja de publicar en 2025-07 y su último mes
+  incluye solo 8 personas (Alcalde S/ 18 704,42 y Gerente Municipal S/ 17 904,42, ambos con régimen "Ley Servir"); Caja
+  publica un único registro por mes.
+- Las ~85 municipalidades restantes no publicaron personal en los 3 meses sondeados. Falta un sondeo exhaustivo
+  (≈3 000 peticiones, pendiente de autorización).
+
+## 4. Pendientes de verificar
 
 | Fuente | URL candidata | Estado |
 |---|---|---|

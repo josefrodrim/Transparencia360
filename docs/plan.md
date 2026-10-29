@@ -7,7 +7,8 @@ Leyenda: [x] hecho · [ ] pendiente
 - [x] Directorio oficial de municipalidades y ubigeos (INEI) → `database/seeds/municipalidades.csv` (102 en Huancavelica)
 - [x] `id_entidad` PTE: 95/102 con confianza alta (`database/seeds/pte_entidades_09.csv`); 7 pendientes
 - [x] Sondeo de disponibilidad (3 meses): 7 municipalidades publican personal
-- [ ] Extracción completa de las 7 (+3 sin sondear) y sondeo exhaustivo del resto (requiere autorización)
+- [x] Extracción completa 2024-01→2026-10 de las 7 que publican (las 3 sin sondear no tienen datos)
+- [ ] Sondeo exhaustivo de las ~85 restantes (requiere autorización por volumen)
 - [ ] Evaluar los periodos 2013–2023 de la MPH
 - [ ] Revisar las condiciones de uso de transparencia.gob.pe y Datos Abiertos
 
