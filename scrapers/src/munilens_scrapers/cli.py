@@ -56,6 +56,28 @@ COLUMNAS_SALIDA = [
 ]
 
 
+SEEDS = Path(__file__).resolve().parents[3] / "database" / "seeds"
+
+
+def cargar_por_ubigeo(ubigeo: str, seeds: Path = SEEDS) -> dict:
+    """Entidad a partir de los seeds (directorio INEI + cruce PTE). Solo cruces de confianza alta."""
+    with (seeds / "municipalidades.csv").open(encoding="utf-8", newline="") as fh:
+        muni = next((r for r in csv.DictReader(fh) if r["ubigeo"] == ubigeo), None)
+    if muni is None:
+        raise SystemExit(f"Ubigeo {ubigeo} no está en el directorio INEI")
+    with (seeds / f"pte_entidades_{ubigeo[:2]}.csv").open(encoding="utf-8", newline="") as fh:
+        cruce = next((r for r in csv.DictReader(fh) if r["ubigeo"] == ubigeo), None)
+    if cruce is None or cruce["confianza"] != "alta":
+        raise SystemExit(f"Ubigeo {ubigeo} sin id PTE de confianza alta")
+    return {
+        "slug": f"ubigeo-{ubigeo}",
+        "nombre": muni["nombre"],
+        "ubigeo": ubigeo,
+        "pte_id_entidad": int(cruce["pte_id_entidad"]),
+        "ruc": None,
+    }
+
+
 def cargar_entidad(slug: str, config: Path) -> dict:
     with config.open("rb") as fh:
         entidades = tomllib.load(fh)["entidad"]
@@ -137,7 +159,7 @@ def resumen_markdown(ent: dict, resultados: list[tuple[Extraccion, ReporteCalida
     lineas = [
         f"# Reporte de extracción — {ent['nombre']}",
         "",
-        f"Fuente: PTE Personal (id_entidad={ent['pte_id_entidad']}, RUC {ent['ruc']})",
+        f"Fuente: PTE Personal (id_entidad={ent['pte_id_entidad']}, RUC {ent['ruc'] or 'no verificado'})",
         "",
         "| Periodo | Estado | Publicados | Únicos | Errores | Advertencias | Suma únicos (S/) | Mediana (S/) | Nota |",
         "|---|---|---|---|---|---|---|---|---|",
@@ -172,7 +194,9 @@ def resumen_markdown(ent: dict, resultados: list[tuple[Extraccion, ReporteCalida
 
 def main(argv: list[str] | None = None) -> int:
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    ap.add_argument("--entidad", required=True, help="slug en config/entidades.toml")
+    grupo = ap.add_mutually_exclusive_group(required=True)
+    grupo.add_argument("--entidad", help="slug en config/entidades.toml")
+    grupo.add_argument("--ubigeo", help="ubigeo INEI (usa database/seeds/pte_entidades_XX.csv)")
     ap.add_argument("--desde", required=True, help="YYYY-MM")
     ap.add_argument("--hasta", required=True, help="YYYY-MM")
     ap.add_argument("--data-dir", type=Path, default=Path("data"))
@@ -181,7 +205,7 @@ def main(argv: list[str] | None = None) -> int:
     args = ap.parse_args(argv)
 
     setup_logging()
-    ent = cargar_entidad(args.entidad, args.config)
+    ent = cargar_entidad(args.entidad, args.config) if args.entidad else cargar_por_ubigeo(args.ubigeo)
     client = PoliteClient(min_interval_s=args.intervalo)
     store = RawStore(args.data_dir / "raw")
     resultados = [

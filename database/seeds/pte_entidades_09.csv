@@ -1,0 +1,103 @@
+ubigeo,tipo,provincia,distrito,pte_id_entidad,nombre_pte,confianza,motivo
+090101,provincial,Huancavelica,Huancavelica,980,MUNICIPALIDAD PROVINCIAL DE HUANCAVELICA,alta,nombre único a nivel nacional
+090102,distrital,Huancavelica,Acobambilla,11895,Municipalidad Distrital de Acobambilla (MD-ACOBAMBILLA),alta,nombre único en el bloque de ids
+090103,distrital,Huancavelica,Acoria,11896,Municipalidad Distrital de Acoria (MD-ACORIA),alta,nombre único en el bloque de ids
+090104,distrital,Huancavelica,Conayca,11897,Municipalidad Distrital de Conayca (MD-Conayca),alta,nombre único en el bloque de ids
+090105,distrital,Huancavelica,Cuenca,11898,Municipalidad Distrital de Cuenca - Huancavelica (MD-Cuenca),alta,nombre único en el bloque de ids
+090106,distrital,Huancavelica,Huachocolpa,11899,Municipalidad Distrital de Huachocolpa - Huancavelica (MD-Huachocolpa),alta,nombre único en el bloque de ids
+090107,distrital,Huancavelica,Huayllahuara,11900,Municipalidad Distrital de Huayllahuara (MD-Huayllahuara),alta,nombre único en el bloque de ids
+090108,distrital,Huancavelica,Izcuchaca,11901,Municipalidad Distrital de Izcuchaca (MD-Izcuchaca),alta,nombre único en el bloque de ids
+090109,distrital,Huancavelica,Laria,11902,Municipalidad Distrital de Laria (MD-Laria),alta,nombre único en el bloque de ids
+090110,distrital,Huancavelica,Manta,11903,Municipalidad Distrital de Manta (MD-Manta),alta,nombre único en el bloque de ids
+090111,distrital,Huancavelica,Mariscal Cáceres,11904,Municipalidad Distrital de Mariscal Cáceres - Huancavelica (MD-MARISCAL CACERES),alta,nombre único en el bloque de ids
+090112,distrital,Huancavelica,Moya,11905,Municipalidad Distrital de Moya (MD-MOYA),alta,nombre único en el bloque de ids
+090113,distrital,Huancavelica,Nuevo Occoro,11906,Municipalidad Distrital de Nuevo Occoro (MD-NUEVO OCCORO),alta,nombre único en el bloque de ids
+090114,distrital,Huancavelica,Palca,11907,Municipalidad Distrital de Palca - Huancavelica (MD-PALCA),alta,nombre único en el bloque de ids
+090115,distrital,Huancavelica,Pilchaca,11908,Municipalidad Distrital de Pilchaca (MD-PILCHACA),alta,nombre único en el bloque de ids
+090116,distrital,Huancavelica,Vilca,11909,Municipalidad Distrital de Vilca (MD-VILCA),alta,nombre único en el bloque de ids
+090117,distrital,Huancavelica,Yauli,11910,Municipalidad Distrital de Yauli - Huancavelica (MDY),alta,nombre único en el bloque de ids
+090118,distrital,Huancavelica,Ascensión,11911,Municipalidad Distrital De Ascensión (MD-Ascensión),alta,nombre único en el bloque de ids
+090119,distrital,Huancavelica,Huando,11984,Municipalidad Distrital de Huando (MD-Huando),alta,nombre único en el bloque de ids
+090201,provincial,Acobamba,Acobamba,11912,Municipalidad Provincial de Acobamba (MP-ACOBAMBA),alta,nombre único en el bloque de ids
+090202,distrital,Acobamba,Andabamba,11914,Municipalidad Distrital de Andabamba - Cajamarca (MD-ANDABAMBA),alta,nombre único en el bloque de ids
+090203,distrital,Acobamba,Anta,11915,Municipalidad Distrital de Anta - Huancavelica (MD-Anta),alta,nombre único en el bloque de ids
+090204,distrital,Acobamba,Caja,11916,Municipalidad Distrital de Caja (MD-Caja),alta,nombre único en el bloque de ids
+090205,distrital,Acobamba,Marcas,11917,Municipalidad Distrital de Marcas (MD-Marcas),alta,nombre único en el bloque de ids
+090206,distrital,Acobamba,Paucara,11918,Municipalidad Distrital de Paucara (MDP),alta,nombre único en el bloque de ids
+090207,distrital,Acobamba,Pomacocha,11919,Municipalidad Distrital de Pomacocha (MD-POMACOCHA),alta,nombre único en el bloque de ids
+090208,distrital,Acobamba,Rosario,11920,Municipalidad Distrital de Rosario (MD-ROSARIO),alta,nombre único en el bloque de ids
+090301,provincial,Angaraes,Lircay,11921,Municipalidad Provincial Angaraes Lircay (MPAL),alta,nombre único en el bloque de ids
+090302,distrital,Angaraes,Anchonga,11923,Municipalidad Distrital de Anchonga (MD-Anchonga),alta,nombre único en el bloque de ids
+090303,distrital,Angaraes,Callanmarca,11924,Municipalidad Distrital de Callanmarca,alta,nombre único en el bloque de ids
+090304,distrital,Angaraes,Ccochaccasa,11925,Municipalidad Distrital de Ccochaccasa (MD-Ccochaccasa),alta,nombre único en el bloque de ids
+090305,distrital,Angaraes,Chincho,11926,Municipalidad Distrital de Chincho (MD-Chincho),alta,nombre único en el bloque de ids
+090306,distrital,Angaraes,Congalla,11927,Municipalidad Distrital de Congalla (Md-Congalla),alta,nombre único en el bloque de ids
+090307,distrital,Angaraes,Huanca-Huanca,11928,Municipalidad Distrital de Huanca-Huanca,alta,nombre único en el bloque de ids
+090308,distrital,Angaraes,Huayllay Grande,11929,Municipalidad Distrital de Huayllay Grande (MD-HuayllayGrande),alta,nombre único en el bloque de ids
+090309,distrital,Angaraes,Julcamarca,11930,Municipalidad Distrital de Julcamarca (MD-Julcamarca),alta,nombre único en el bloque de ids
+090310,distrital,Angaraes,San Antonio de Antaparco,11931,Municipalidad Distrital de San Antonio de Antaparco (MD-SAN ANTONIO),alta,nombre único en el bloque de ids
+090311,distrital,Angaraes,Santo Tomás de Pata,11932,Municipalidad Distrital de Santo Tomás de Pata (MD-SANTO TOMAS),alta,nombre único en el bloque de ids
+090312,distrital,Angaraes,Secclla,11933,Municipalidad Distrital de Secclla (MD-Secclla),alta,nombre único en el bloque de ids
+090401,provincial,Castrovirreyna,Castrovirreyna,11934,Municipalidad Provincial de Castrovirreyna (M.P.C.),alta,nombre único en el bloque de ids
+090402,distrital,Castrovirreyna,Arma,11936,Municipalidad Distrital de Arma (MD-Arma),alta,nombre único en el bloque de ids
+090403,distrital,Castrovirreyna,Aurahua,11937,Municipalidad Distrital de Aurahua (MD-Aurahua),alta,nombre único en el bloque de ids
+090404,distrital,Castrovirreyna,Capillas,11938,Municipalidad Distrital de Capillas (MD-Capillas),alta,nombre único en el bloque de ids
+090405,distrital,Castrovirreyna,Chupamarca,11939,Municipalidad Distrital de Chupamarca (MD-Chupamarca),alta,nombre único en el bloque de ids
+090406,distrital,Castrovirreyna,Cocas,11940,Municipalidad Distrital de Cocas (MD-Cocas),alta,nombre único en el bloque de ids
+090407,distrital,Castrovirreyna,Huachos,11941,Municipalidad Distrital de Huachos (M.D.H.),alta,nombre único en el bloque de ids
+090408,distrital,Castrovirreyna,Huamatambo,11942,Municipalidad Distrital de Huamatambo,alta,nombre único en el bloque de ids
+090409,distrital,Castrovirreyna,Mollepampa,11943,Municipalidad Distrital de Mollepampa (MD-MOLLEPAMPA),alta,nombre único en el bloque de ids
+090410,distrital,Castrovirreyna,San Juan,11944,Municipalidad Distrital de San Juan-CASTROVIRREYNA-HUANCAVELICA (MDSJC),alta,nombre único en el bloque de ids
+090411,distrital,Castrovirreyna,Santa Ana,11945,Municipalidad Distrital de Santa Ana (MD-STA.ANA),alta,nombre único en el bloque de ids
+090412,distrital,Castrovirreyna,Tantara,11946,Municipalidad Distrital de Tantara (MDTantara),alta,nombre único en el bloque de ids
+090413,distrital,Castrovirreyna,Ticrapo,11947,Municipalidad Distrital de Ticrapo (MD-TICRAPO),alta,nombre único en el bloque de ids
+090501,provincial,Churcampa,Churcampa,11948,Municipalidad Provincial de Churcampa (MPCH),alta,nombre único en el bloque de ids
+090502,distrital,Churcampa,Anco,11950,Municipalidad Distrital de Anco - La Mar - Ayacucho (MD-Anco),alta,nombre único en el bloque de ids
+090503,distrital,Churcampa,Chinchihuasi,11951,Municipalidad Distrital de Chinchihuasi (MD-Chinchihasi),alta,nombre único en el bloque de ids
+090504,distrital,Churcampa,El Carmen,11952,Municipalidad Distrital de El Carmen - Huancavelica (MD-ELCarmen),alta,nombre único en el bloque de ids
+090505,distrital,Churcampa,La Merced,11953,Municipalidad Distrital de La Merced - Churcampa (MD-LaMerced),alta,nombre único en el bloque de ids
+090506,distrital,Churcampa,Locroja,11954,Municipalidad Distrital de Locroja (MD-Locroja),alta,nombre único en el bloque de ids
+090507,distrital,Churcampa,Paucarbamba,11955,Municipalidad Distrital de Paucarbamba (MD-PAUCARBAMBA),alta,nombre único en el bloque de ids
+090508,distrital,Churcampa,San Miguel de Mayocc,11956,Municipalidad Distrital de San Miguel de Mayocc (MD-SMMAYOCC),alta,nombre único en el bloque de ids
+090509,distrital,Churcampa,San Pedro de Coris,11957,Municipalidad Distrital de San Pedro de Coris (MD-SPCORIS),alta,nombre único en el bloque de ids
+090510,distrital,Churcampa,Pachamarca,11958,Municipalidad Distrital de Pachamarca (MD-PACHAMARCA),alta,nombre único en el bloque de ids
+090511,distrital,Churcampa,Cosme,,,pendiente,sin coincidencias
+090601,provincial,Huaytará,Huaytará,11959,Municipalidad Provincial de Huaytara (MPH),alta,nombre único en el bloque de ids
+090602,distrital,Huaytará,Ayavi,11961,Municipalidad Distrital de Ayavi (MD-Ayavi),alta,nombre único en el bloque de ids
+090603,distrital,Huaytará,Córdova,11962,Municipalidad Distrital de Córdova (MD-Córdova),alta,nombre único en el bloque de ids
+090604,distrital,Huaytará,Huayacundo Arma,11963,Municipalidad Distrital de Huayacundo Arma,alta,nombre único en el bloque de ids
+090605,distrital,Huaytará,Laramarca,11964,Municipalidad Distrital de Laramarca (MD-Laramarca),alta,nombre único en el bloque de ids
+090606,distrital,Huaytará,Ocoyo,11965,Municipalidad Distrital de Ocoyo (MD-OCOYO),alta,nombre único en el bloque de ids
+090607,distrital,Huaytará,Pilpichaca,11966,Municipalidad Distrital de Pilpichaca (MDPilpichaca),alta,nombre único en el bloque de ids
+090608,distrital,Huaytará,Querco,11967,Municipalidad Distrital de Querco (MDQ),alta,nombre único en el bloque de ids
+090609,distrital,Huaytará,Quito-Arma,11968,Municipalidad Distrital de Quito-Arma (MDQuito-Arma),alta,nombre único en el bloque de ids
+090610,distrital,Huaytará,San Antonio de Cusicancha,11969,Municipalidad Distrital de San Antonio de Cusicancha (MD-SACUSICANCHA),alta,nombre único en el bloque de ids
+090611,distrital,Huaytará,San Francisco de Sangayaico,11970,Municipalidad Distrital de San Francisco de Sangayaico (MDSFS),alta,nombre único en el bloque de ids
+090612,distrital,Huaytará,San Isidro,11971,Municipalidad Distrital de San Isidro - Huancavelica (MDSI),alta,nombre único en el bloque de ids
+090613,distrital,Huaytará,Santiago de Chocorvos,11972,Municipalidad Distrital de Santiago de Chocorvos (MD-SANT.CHOCORVOS),alta,nombre único en el bloque de ids
+090614,distrital,Huaytará,Santiago de Quirahuara,11973,Municipalidad Distrital de Santiago de Quirahuara (MD-SANT.QUIRAHUARA),alta,nombre único en el bloque de ids
+090615,distrital,Huaytará,Santo Domingo de Capillas,11974,Municipalidad Distrital de Santo Domingo de Capillas (MDSDC),alta,nombre único en el bloque de ids
+090616,distrital,Huaytará,Tambo,11975,Municipalidad Distrital de Tambo (MDT),alta,nombre único en el bloque de ids
+090701,provincial,Tayacaja,Pampas,11976,Municipalidad Provincial de Tayacaja (MP-TAYACAJA),alta,nombre único en el bloque de ids
+090702,distrital,Tayacaja,Acostambo,11978,Municipalidad Distrital de Acostambo (MD-ACOSTAMBO),alta,nombre único en el bloque de ids
+090703,distrital,Tayacaja,Acraquia,11979,Municipalidad Distrital de Acraquia (MD-ACRAQUIA),alta,nombre único en el bloque de ids
+090704,distrital,Tayacaja,Ahuaycha,13208,MUNICIPALIDAD DISTRITAL DE AHUAYCHA,alta,nombre único a nivel nacional
+090705,distrital,Tayacaja,Colcabamba,11981,Municipalidad Distrital de Colcabamba - Huancavelica (MDC),alta,nombre único en el bloque de ids
+090706,distrital,Tayacaja,Daniel Hernández,11982,Municipalidad Distrital de Daniel Hernandez (DanielHernandez),alta,nombre único en el bloque de ids
+090707,distrital,Tayacaja,Huachocolpa,11983,Municipalidad Distrital de Huachocolpa - Huancavelica - Tayacaja (MD-Huachocolpa),alta,nombre único en el bloque de ids
+090709,distrital,Tayacaja,Huaribamba,11985,Municipalidad Distrital de Huaribamba,alta,nombre único en el bloque de ids
+090710,distrital,Tayacaja,Ñahuimpuquio,13209,MUNICIPALIDAD DISTRITAL DE ÑAHUIMPUQUIO,alta,nombre único a nivel nacional
+090711,distrital,Tayacaja,Pazos,11987,Municipalidad Distrital de Pazos (MD-PAZOS),alta,nombre único en el bloque de ids
+090713,distrital,Tayacaja,Quishuar,11988,Municipalidad Distrital de Quishuar (MD-QUISHUAR),alta,nombre único en el bloque de ids
+090714,distrital,Tayacaja,Salcabamba,11989,Municipalidad Distrital de Salcabamba (MD-SALCABAMBA),alta,nombre único en el bloque de ids
+090715,distrital,Tayacaja,Salcahuasi,11990,Municipalidad Distrital de Salcahuasi (MD-SALCAHUASI),alta,nombre único en el bloque de ids
+090716,distrital,Tayacaja,San Marcos de Rocchac,11991,Municipalidad Distrital de San Marcos de Rocchac (MD-SMARCOSROCCHAC),alta,nombre único en el bloque de ids
+090717,distrital,Tayacaja,Surcubamba,11992,Municipalidad Distrital de Surcubamba (MD-SURCUBAMBA),alta,nombre único en el bloque de ids
+090718,distrital,Tayacaja,Tintay Puncu,11993,Municipalidad Distrital de Tintay Puncu (MD-TINTAY PUNCU),alta,nombre único en el bloque de ids
+090719,distrital,Tayacaja,Quichuas,,,pendiente,sin coincidencias
+090720,distrital,Tayacaja,Andaymarca,,,pendiente,sin coincidencias
+090721,distrital,Tayacaja,Roble,,,pendiente,sin coincidencias
+090722,distrital,Tayacaja,Pichos,,,pendiente,sin coincidencias
+090723,distrital,Tayacaja,Santiago de Tucuma,,,pendiente,sin coincidencias
+090724,distrital,Tayacaja,Lambras,80974,MUNICIPALIDAD DISTRITAL DE LAMBRAS,alta,nombre único a nivel nacional
+090725,distrital,Tayacaja,Cochabamba,,,pendiente,2 coincidencias ambiguas

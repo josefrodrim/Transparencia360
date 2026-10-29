@@ -66,3 +66,10 @@ def test_carga_duplicada_se_marca_y_excluye_de_agregados(csv_sintetico):
     assert rep.estadisticas["suma_total"] == "12594.6900"
     assert rep.estadisticas["suma_total_publicada"] == "14758.8800"
     assert duplicados_exactos([r0, r1, r2, recarga]) == {"10": r0.pte_id_personal}
+
+
+def test_sin_ruc_esperado_exige_ruc_unico(csv_sintetico):
+    r0, r1, r2 = _regs(csv_sintetico)
+    assert validar([r0, r1, r2], 2026, 8, None).errores == 0
+    otro = replace(r2, ruc_entidad="20999999999")
+    assert "ruc_multiple" in _codigos(validar([r0, r1, otro], 2026, 8, None))

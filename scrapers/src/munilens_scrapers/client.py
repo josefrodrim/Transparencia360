@@ -74,6 +74,16 @@ class PoliteClient:
         self._throttle()
         return self.session.get(url, timeout=self.timeout_s)
 
+    def post(self, url: str, data: dict[str, object]) -> requests.Response:
+        """POST de formularios de consulta pública (sin reintento automático: no es idempotente en general)."""
+        if not self._robots_for(url).can_fetch(self.user_agent, url):
+            raise RobotsDisallowedError(url)
+        self._throttle()
+        resp = self.session.post(url, data=data, timeout=self.timeout_s)
+        log.info("POST", extra={"ctx": {"url": url, "status": resp.status_code, "bytes": len(resp.content)}})
+        resp.raise_for_status()
+        return resp
+
     def get(self, url: str) -> requests.Response:
         if not self._robots_for(url).can_fetch(self.user_agent, url):
             raise RobotsDisallowedError(url)

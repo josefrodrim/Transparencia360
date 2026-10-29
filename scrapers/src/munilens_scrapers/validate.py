@@ -50,7 +50,8 @@ def duplicados_exactos(registros: list[RegistroPersonal]) -> dict[str, str]:
     return dup
 
 
-def validar(registros: list[RegistroPersonal], anio: int, mes: int, ruc_esperado: str) -> ReporteCalidad:
+def validar(registros: list[RegistroPersonal], anio: int, mes: int, ruc_esperado: str | None) -> ReporteCalidad:
+    """`ruc_esperado=None`: entidad sin RUC verificado; se exige un único RUC en el periodo."""
     rep = ReporteCalidad(periodo=f"{anio:04d}-{mes:02d}", registros=len(registros))
     add = rep.hallazgos.append
 
@@ -62,7 +63,7 @@ def validar(registros: list[RegistroPersonal], anio: int, mes: int, ruc_esperado
         pk = r.pte_id_personal
         if (r.anio, r.mes) != (anio, mes):
             add(Hallazgo("error", "periodo_distinto", f"{r.anio}-{r.mes:02d}", pk))
-        if r.ruc_entidad != ruc_esperado:
+        if ruc_esperado is not None and r.ruc_entidad != ruc_esperado:
             add(Hallazgo("error", "ruc_distinto", r.ruc_entidad, pk))
         if r.regimen is None:
             add(Hallazgo("advertencia", "regimen_desconocido", r.regimen_codigo, pk))
@@ -76,6 +77,9 @@ def validar(registros: list[RegistroPersonal], anio: int, mes: int, ruc_esperado
             add(Hallazgo("error", "monto_negativo", str(r.total), pk))
         if r.total == 0:
             add(Hallazgo("advertencia", "total_cero", "", pk))
+
+    if ruc_esperado is None and len(rucs := {r.ruc_entidad for r in registros}) > 1:
+        add(Hallazgo("error", "ruc_multiple", ", ".join(sorted(rucs))))
 
     dup = duplicados_exactos(registros)
     if dup:
@@ -92,6 +96,7 @@ def validar(registros: list[RegistroPersonal], anio: int, mes: int, ruc_esperado
         totales = [r.total for r in unicos]
         rep.estadisticas = {
             "registros_publicados": len(registros),
+            "ruc_entidad": sorted({r.ruc_entidad for r in registros}),
             "registros_unicos": len(unicos),
             "suma_total_publicada": str(sum((r.total for r in registros), Decimal(0))),
             "suma_total": str(sum(totales, Decimal(0))),
