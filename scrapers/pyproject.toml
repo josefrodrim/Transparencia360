@@ -1,0 +1,30 @@
+[project]
+name = "munilens-scrapers"
+version = "0.1.0"
+description = "Extractores de fuentes públicas para MuniLens"
+requires-python = ">=3.12"
+dependencies = ["requests>=2.32"]
+
+[project.optional-dependencies]
+dev = ["pytest>=8", "ruff>=0.6"]
+
+[project.scripts]
+munilens-extract = "munilens_scrapers.cli:main"
+
+[build-system]
+requires = ["setuptools>=69"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.ruff]
+line-length = 120
+target-version = "py312"
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "B", "UP", "SIM"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+markers = ["red: pruebas que acceden al portal real (opt-in con MUNILENS_RED=1)"]

@@ -1,0 +1,11 @@
+# Catálogo de entidades a extraer.
+# id_entidad: identificador interno del Portal de Transparencia Estándar (PTE).
+# ruc: verificado contra la columna VC_PERSONAL_RUC_ENTIDAD del CSV del PTE (2026-10-28).
+
+[[entidad]]
+slug = "mp-huancavelica"
+nombre = "Municipalidad Provincial de Huancavelica"
+tipo = "provincial"
+ubigeo = "0901"          # provincia; pendiente validar contra el listado oficial del INEI
+pte_id_entidad = 980
+ruc = "20171725144"
