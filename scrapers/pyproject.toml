@@ -12,6 +12,7 @@ dev = ["pytest>=8", "ruff>=0.6"]
 munilens-extract = "munilens_scrapers.cli:main"
 munilens-inei = "munilens_scrapers.cli_inei:main"
 munilens-pte-descubrir = "munilens_scrapers.cli_pte_descubrir:main"
+munilens-mef = "munilens_scrapers.cli_mef:main"
 
 [build-system]
 requires = ["setuptools>=69"]

@@ -65,7 +65,9 @@ Hecho y en git:
   (> 10× la mediana y > S/ 30 000) solo para revisión.
 
 Siguiente:
-1. Para las 92 que no publican: alternativas legítimas (MEF Consulta Amigable = gasto agregado; solicitudes Ley 27806).
+1. Para las 92 que no publican: MEF devengado mensual (gasto agregado por municipalidad: personal 2.1, CAS 2.3.2.8,
+   pensiones 2.2) → `munilens-mef --departamento 09 --anios 2024,2025,2026` (streaming de ~2,5 GB/año, guarda solo el
+   subconjunto). **Las solicitudes de acceso a la información (Ley 27806) quedan descartadas por decisión del usuario.**
 2. Alcance: solo municipalidades (el usuario descartó el Congreso).
 
 ## Reglas del proyecto

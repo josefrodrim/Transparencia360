@@ -113,7 +113,27 @@
 - Conclusión: el PTE cubre de forma útil a ~4 municipalidades (MP Huancavelica, Ascensión, MP Acobamba, y en parte
   MP Tayacaja). Para el resto hacen falta vías alternativas (MEF agregado; solicitudes Ley 27806).
 
-## 4. Pendientes de verificar
+## 4. MEF — devengado mensual (VERIFICADO, en uso)
+
+| Atributo | Valor |
+|---|---|
+| Catálogo | https://www.datosabiertos.gob.pe/dataset/presupuesto-y-ejecución-de-gasto-–-devengado-mensual |
+| Archivos | `https://fs.datosabiertos.mef.gob.pe/datastorefiles/{AAAA}-Gasto-Devengado-Mensual.csv` (2025+), `{AAAA}-Gasto-Devengado.csv` (≤2024). ~2,5 GB/año, todo el sector público |
+| Acceso | Descarga pública; el servidor acepta `Range` (se usa para reanudar). También hay API `api.datosabiertos.mef.gob.pe/DatosAbiertos/v1/datastore_search` (CKAN), sin `resource_id` de gasto identificado |
+| Extractor | `munilens-mef --departamento 09 --anios 2024,2025,2026`: streaming filtrado (`NIVEL_GOBIERNO=M`, `DEPARTAMENTO_EJECUTORA=09`); guarda solo el subconjunto en `data/raw/mef_gasto_devengado/09/` |
+
+- 2026 (corte 22/10/2026): devengado de enero a septiembre; 51 918 filas de Huancavelica; **104 ejecutoras en las 102
+  municipalidades** (cobertura total, a diferencia del PTE).
+- **Corrección verificada:** el CAS vigente se registra en **2.1.1.13** (dentro de personal), no en 2.3.2.8; en 2026 no
+  hay registros en 2.3.2.8. Se suma 2.3.2.8 como CAS solo para años anteriores.
+- Indicadores: `personal` (2.1 completa), `cas` (2.1.1.13 + 2.3.2.8), `dietas` (2.1.1.10), `locacion_pn` (2.3.2.9,
+  honorarios a personas naturales), `pensiones` (2.2).
+- **No es comparable 1:1 con el PTE.** MP Huancavelica, 2026-08: PTE S/ 759 668 frente a MEF 2.1 S/ 1 155 593. La 2.1
+  incluye aportes del empleador, gastos variables, dietas y sentencias, y el devengado no coincide necesariamente con
+  el mes de pago. Ascensión (+64 %) y Acobamba (+45 %) muestran la misma diferencia.
+- Son montos agregados por municipalidad: no identifican personas.
+
+## 5. Pendientes de verificar
 
 | Fuente | URL candidata | Estado |
 |---|---|---|
