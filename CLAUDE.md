@@ -65,7 +65,10 @@ Hecho y en git:
   (> 10× la mediana y > S/ 30 000) solo para revisión.
 
 Siguiente:
-1. Para las 92 que no publican: MEF devengado mensual (gasto agregado por municipalidad: personal 2.1, CAS 2.3.2.8,
+- MEF devengado 2024–2026 extraído para las 102 municipalidades; tabla en `docs/mef_gasto_personal_huancavelica.md`
+  (subconjuntos RAW en `data/raw/mef_gasto_devengado/09/`, regenerables).
+
+1. (Hecho) Para las 92 que no publican: MEF devengado mensual (gasto agregado por municipalidad: personal 2.1, CAS 2.3.2.8,
    pensiones 2.2) → `munilens-mef --departamento 09 --anios 2024,2025,2026` (streaming de ~2,5 GB/año, guarda solo el
    subconjunto). **Las solicitudes de acceso a la información (Ley 27806) quedan descartadas por decisión del usuario.**
 2. Alcance: solo municipalidades (el usuario descartó el Congreso).

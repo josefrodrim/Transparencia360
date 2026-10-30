@@ -9,7 +9,7 @@ Leyenda: [x] hecho · [ ] pendiente
 - [x] Sondeo de disponibilidad (3 meses): 7 municipalidades publican personal
 - [x] Extracción completa 2024-01→2026-10 de las 7 que publican (las 3 sin sondear no tienen datos)
 - [x] Sondeo exhaustivo 2024-01→2026-10 de las 95 cruzadas: 10 publican personal (tabla en docs/fuentes-huancavelica.md §3)
-- [ ] Gasto agregado en personal (MEF devengado mensual) para las 102 municipalidades (solicitudes Ley 27806 descartadas por el usuario)
+- [x] Gasto agregado en personal (MEF devengado mensual 2024–2026) para las 102 municipalidades → `docs/mef_gasto_personal_huancavelica.md` (solicitudes Ley 27806 descartadas por el usuario)
 - [ ] Evaluar los periodos 2013–2023 de la MPH
 - [ ] Revisar las condiciones de uso de transparencia.gob.pe y Datos Abiertos
 
