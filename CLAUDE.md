@@ -58,17 +58,15 @@ Hecho y en git:
   090307 y 090609 no tienen datos. Ascensión y Acobamba traen filas con total ≠ suma de componentes (se marcan, no se
   corrigen). `data/` es local: si se perdió, se regenera con `munilens-extract --ubigeo <u> --desde 2024-01 --hasta 2026-10`.
 
-En curso (autorizado por el usuario 2026-10-29): **sondeo exhaustivo** 2024-01→2026-10 de las 85 municipalidades
-restantes con cruce "alta" (lista en `data/exhaustivo_ubigeos.txt`, regenerable desde `database/seeds/pte_entidades_09.csv`
-excluyendo las 10 ya extraídas). Progreso en `data/logs/exhaustivo.progress`. Si se cortó, relanzar (reanuda solo):
-`scripts/sondeo_exhaustivo.sh data/exhaustivo_ubigeos.txt 2024-01 2026-10`. Al terminar: tabla de disponibilidad en
-`docs/fuentes-huancavelica.md` §3 y extracción ya queda hecha para las que tengan datos.
+- **Sondeo exhaustivo terminado** (2026-10-29): de 102 municipalidades, solo 10 publicaron personal en 2024-01→2026-10
+  (090101, 090117, 090118, 090119, 090201, 090204, 090301, 090304, 090310, 090701); tabla en
+  `docs/fuentes-huancavelica.md` §3. Para rehacerlo: `scripts/sondeo_exhaustivo.sh <lista> 2024-01 2026-10` (reanudable).
+- El lector repara registros partidos en varias líneas (`fila_reparada`); `validate` marca `monto_atipico`
+  (> 10× la mediana y > S/ 30 000) solo para revisión.
 
 Siguiente:
-4. Para las que no publican: alternativas legítimas (MEF Consulta Amigable = gasto agregado; solicitudes Ley 27806).
-5. Pendiente técnico: algunos CSV del PTE (visto en el Congreso, id 16, 2026-09) traen campos con saltos de línea sin
-   comillas → filas partidas; `leer_csv` aún no lo repara.
-6. Alcance: solo municipalidades (el usuario descartó el Congreso).
+1. Para las 92 que no publican: alternativas legítimas (MEF Consulta Amigable = gasto agregado; solicitudes Ley 27806).
+2. Alcance: solo municipalidades (el usuario descartó el Congreso).
 
 ## Reglas del proyecto
 

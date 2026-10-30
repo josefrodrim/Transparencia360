@@ -8,7 +8,8 @@ Leyenda: [x] hecho · [ ] pendiente
 - [x] `id_entidad` PTE: 95/102 con confianza alta (`database/seeds/pte_entidades_09.csv`); 7 pendientes
 - [x] Sondeo de disponibilidad (3 meses): 7 municipalidades publican personal
 - [x] Extracción completa 2024-01→2026-10 de las 7 que publican (las 3 sin sondear no tienen datos)
-- [ ] Sondeo exhaustivo de las ~85 restantes (requiere autorización por volumen)
+- [x] Sondeo exhaustivo 2024-01→2026-10 de las 95 cruzadas: 10 publican personal (tabla en docs/fuentes-huancavelica.md §3)
+- [ ] Vías alternativas para las 92 sin datos: MEF Consulta Amigable (agregado) y solicitudes Ley 27806
 - [ ] Evaluar los periodos 2013–2023 de la MPH
 - [ ] Revisar las condiciones de uso de transparencia.gob.pe y Datos Abiertos
 

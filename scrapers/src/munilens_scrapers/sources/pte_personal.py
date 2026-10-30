@@ -157,12 +157,35 @@ class RegistroPersonal:
         return self.remuneraciones + self.honorarios + self.incentivo + self.gratificacion + self.otros_beneficios
 
 
-def leer_csv(content: bytes) -> list[dict[str, str]]:
+def leer_csv(content: bytes, reparadas: list[int] | None = None) -> list[dict[str, str]]:
+    """Lee el CSV del PTE. Algunas entidades publican campos con saltos de línea sin comillas, lo que parte un
+    registro en varias líneas físicas: se unen (el salto se reemplaza por un espacio) hasta completar las columnas.
+    `reparadas` recibe el número de línea (1 = cabecera) de cada registro reconstruido."""
     texto = content.decode("utf-8-sig")
-    reader = csv.DictReader(io.StringIO(texto, newline=""))
-    if reader.fieldnames != COLUMNAS:
-        raise FormatoInesperadoError(f"columnas inesperadas: {reader.fieldnames}")
-    return list(reader)
+    filas = list(csv.reader(io.StringIO(texto, newline="")))
+    if not filas or filas[0] != COLUMNAS:
+        raise FormatoInesperadoError(f"columnas inesperadas: {filas[0] if filas else None}")
+    n = len(COLUMNAS)
+    registros: list[dict[str, str]] = []
+    i = 1
+    while i < len(filas):
+        fila, inicio = list(filas[i]), i
+        while len(fila) < n and i + 1 < len(filas):
+            i += 1
+            siguiente = filas[i]
+            if siguiente:
+                fila[-1] = f"{fila[-1]} {siguiente[0]}".strip()
+                fila.extend(siguiente[1:])
+        if len(fila) != n:
+            if not any(c.strip() for c in fila):  # línea vacía al final
+                i += 1
+                continue
+            raise FormatoInesperadoError(f"línea {inicio + 1}: {len(fila)} columnas, no reparable")
+        if i != inicio and reparadas is not None:
+            reparadas.append(inicio + 1)
+        registros.append(dict(zip(COLUMNAS, fila, strict=True)))
+        i += 1
+    return registros
 
 
 def huella_csv(content: bytes) -> str:

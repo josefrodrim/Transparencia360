@@ -73,3 +73,12 @@ def test_sin_ruc_esperado_exige_ruc_unico(csv_sintetico):
     assert validar([r0, r1, r2], 2026, 8, None).errores == 0
     otro = replace(r2, ruc_entidad="20999999999")
     assert "ruc_multiple" in _codigos(validar([r0, r1, otro], 2026, 8, None))
+
+
+def test_monto_atipico_se_senala_sin_error(csv_sintetico):
+    r0, *_ = _regs(csv_sintetico)
+    normales = [replace(r0, pte_id_personal=str(i), nombres=f"N{i}") for i in range(5)]
+    raro = replace(r0, pte_id_personal="99", nombres="X", remuneraciones=Decimal("230000"), total=Decimal("230000"))
+    rep = validar([*normales, raro], 2026, 8, "20000000001")
+    assert rep.errores == 0
+    assert [h.pte_id_personal for h in rep.hallazgos if h.codigo == "monto_atipico"] == ["99"]

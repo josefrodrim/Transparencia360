@@ -11,6 +11,9 @@ from munilens_scrapers.sources.pte_personal import RegistroPersonal
 
 Severidad = Literal["error", "advertencia"]
 
+FACTOR_ATIPICO = 10
+UMBRAL_ATIPICO_ABS = Decimal(30000)
+
 
 @dataclass(frozen=True)
 class Hallazgo:
@@ -85,6 +88,21 @@ def validar(registros: list[RegistroPersonal], anio: int, mes: int, ruc_esperado
     if dup:
         add(Hallazgo("advertencia", "carga_duplicada", f"{len(dup)} registros idénticos a otros del mismo periodo"))
     unicos = [r for r in registros if r.pte_id_personal not in dup]
+
+    # Montos muy por encima del resto del periodo: posible error de digitación en la fuente. Solo se señala para
+    # revisión; NO se interpreta como irregularidad ni se corrige.
+    if len(unicos) >= 5:
+        med = median(r.total for r in unicos)
+        for r in unicos:
+            if r.total > UMBRAL_ATIPICO_ABS and r.total > FACTOR_ATIPICO * med:
+                add(
+                    Hallazgo(
+                        "advertencia",
+                        "monto_atipico",
+                        f"total {r.total} > {FACTOR_ATIPICO}× la mediana del periodo ({med}); revisar en la fuente",
+                        r.pte_id_personal,
+                    )
+                )
 
     # Mismo nombre publicado repetido (fuera de duplicados exactos): NO implica misma persona.
     nombres = Counter(r.nombre_busqueda for r in unicos)

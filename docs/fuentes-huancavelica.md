@@ -81,30 +81,37 @@
 
 - `database/seeds/pte_entidades_09.csv`: 95/102 municipalidades con `id_entidad` de confianza alta. Pendientes: Cosme
   (090511) y los distritos nuevos de Tayacaja 090719–090723 y 090725, sin ficha identificable en el PTE.
-- Sondeo de 3 meses (2026-05, 2025-12, 2024-06) en las municipalidades cruzadas: solo 7 publicaron personal. Huachocolpa
-  (090106), Huanca-Huanca (090307) y Quito-Arma (090609) se cruzaron después; en la extracción completa no tienen datos.
-- Extracción completa 2024-01 → 2026-10 de las que publican:
+- **Sondeo exhaustivo** (autorizado por el usuario): las 95 municipalidades, mes a mes de 2024-01 a 2026-10
+  (≈3 200 consultas, 3 s entre cada una).
+- **Resultado: solo 10 de 102 municipalidades publicaron alguna vez personal con remuneraciones en el periodo.**
+  Las otras 85 cruzadas tienen 0 registros en los 34 meses.
 
-| Ubigeo | Municipalidad | Meses con datos (2024-01→2026-10) | Último mes | Personas (último mes) | Mediana S/ | Máximo S/ | Filas con total inconsistente |
-|---|---|---|---|---|---|---|---|
-| 090101 | Municipalidad Provincial de Huancavelica | 26 | 2026-09 | 351 | 1,864.19 | 7,280.00 | 0/10269 (0.0 %) |
-| 090118 | Municipalidad Distrital de Ascensión | 34 | 2026-10 | 49 | 2,152.07 | 4,000.00 | 132/2023 (6.5 %) |
-| 090201 | Municipalidad Provincial de Acobamba | 32 | 2026-08 | 136 | 1,425.00 | 7,500.00 | 83/4195 (2.0 %) |
-| 090204 | Municipalidad Distrital de Caja | 8 | 2026-01 | 1 | 2,060.00 | 2,060.00 | 0/13 (0.0 %) |
-| 090301 | Municipalidad Provincial de Angaraes | 4 | 2024-06 | 64 | 2,000.00 | 4,000.00 | 0/333 (0.0 %) |
-| 090310 | Municipalidad Distrital de San Antonio de Antaparco | 7 | 2026-04 | 16 | 2,100.00 | 3,605.21 | 0/104 (0.0 %) |
-| 090701 | Municipalidad Provincial de Tayacaja | 19 | 2025-07 | 8 | 6,632.10 | 18,704.42 | 0/3356 (0.0 %) |
+| Ubigeo | Municipalidad | Meses con datos (de 34) | Periodo publicado | Último mes | Personas (último mes) | Mediana S/ | Máximo S/ | Filas con total inconsistente |
+|---|---|---|---|---|---|---|---|---|
+| 090101 | Municipalidad Provincial de Huancavelica | 26 | 2024-01 → 2026-09 | 2026-09 | 351 | 1,864.19 | 7,280.00 | 0/10269 (0.0 %) |
+| 090117 | Municipalidad Distrital de Yauli | 14 | 2024-01 → 2026-07 | 2026-07 | 1 | 1,360.00 | 1,360.00 | 0/106 (0.0 %) |
+| 090118 | Municipalidad Distrital de Ascensión | 34 | 2024-01 → 2026-10 | 2026-10 | 49 | 2,152.07 | 4,000.00 | 132/2023 (6.5 %) |
+| 090119 | Municipalidad Distrital de Huando | 1 | 2024-09 → 2024-09 | 2024-09 | 25 | 1,700.00 | 230,300.00 | 1/26 (3.8 %) |
+| 090201 | Municipalidad Provincial de Acobamba | 32 | 2024-01 → 2026-08 | 2026-08 | 136 | 1,425.00 | 7,500.00 | 83/4195 (2.0 %) |
+| 090204 | Municipalidad Distrital de Caja | 8 | 2024-01 → 2026-01 | 2026-01 | 1 | 2,060.00 | 2,060.00 | 0/13 (0.0 %) |
+| 090301 | Municipalidad Provincial de Angaraes | 4 | 2024-01 → 2024-06 | 2024-06 | 64 | 2,000.00 | 4,000.00 | 0/333 (0.0 %) |
+| 090304 | Municipalidad Distrital de Ccochaccasa | 1 | 2025-02 → 2025-02 | 2025-02 | 2 | 1,200.50 | 1,800.00 | 1/2 (50.0 %) |
+| 090310 | Municipalidad Distrital de San Antonio de Antaparco | 7 | 2025-10 → 2026-04 | 2026-04 | 16 | 2,100.00 | 3,605.21 | 0/104 (0.0 %) |
+| 090701 | Municipalidad Provincial de Tayacaja | 19 | 2024-01 → 2025-07 | 2025-07 | 8 | 6,632.10 | 18,704.42 | 0/3356 (0.0 %) |
 
 - Personas = registros únicos del último mes publicado. Los importes son los publicados (columna total) y no se
   anualizan.
-- **Total inconsistente** (Ascensión, Acobamba): filas en las que el total no coincide con la suma de los componentes
-  (p. ej. remuneración S/ 7 200 y total S/ 3 000). Es un error de la entidad al publicar: se conserva tal cual y se marca;
-  no se elige una de las dos cifras.
-- Cobertura irregular: Angaraes solo publicó 2024-01→2024-06; Tayacaja deja de publicar en 2025-07 y su último mes
-  incluye solo 8 personas (Alcalde S/ 18 704,42 y Gerente Municipal S/ 17 904,42, ambos con régimen "Ley Servir"); Caja
-  publica un único registro por mes.
-- Las ~85 municipalidades restantes no publicaron personal en los 3 meses sondeados. Falta un sondeo exhaustivo
-  (≈3 000 peticiones, pendiente de autorización).
+- **Total inconsistente** (Ascensión, Acobamba, Huando, Ccochaccasa): filas en las que el total no coincide con la suma
+  de los componentes (p. ej. remuneración S/ 7 200 y total S/ 3 000). Es un error de la entidad al publicar: se
+  conserva tal cual y se marca; no se elige una de las dos cifras.
+- **Monto atípico** (Huando, 2024-09): Gerente Municipal con remuneración S/ 230 000 (total S/ 230 300), frente a una
+  mediana de S/ 1 700. Probable error de digitación en la fuente; se marca `monto_atipico` para revisión y no se corrige.
+- **Registros partidos** (Yauli, 2024-07): un campo con saltos de línea sin comillas partía el registro; el lector lo
+  reconstruye y lo anota como `fila_reparada`.
+- Cobertura irregular: Angaraes solo publicó 2024-01→2024-06; Tayacaja deja de publicar en 2025-07 (último mes con solo
+  8 personas); Huando y Ccochaccasa publicaron un único mes; Yauli y Caja, 1 registro en su último mes publicado.
+- Conclusión: el PTE cubre de forma útil a ~4 municipalidades (MP Huancavelica, Ascensión, MP Acobamba, y en parte
+  MP Tayacaja). Para el resto hacen falta vías alternativas (MEF agregado; solicitudes Ley 27806).
 
 ## 4. Pendientes de verificar
 

@@ -55,3 +55,20 @@ def test_huella_csv_independiente_del_orden(csv_sintetico):
     invertido = (cab + "".join(reversed(filas))).encode()
     assert invertido != csv_sintetico
     assert pte.huella_csv(invertido) == pte.huella_csv(csv_sintetico)
+
+
+def test_repara_registro_partido_en_varias_lineas(csv_sintetico):
+    cab, f1, f2, f3 = csv_sintetico.decode().splitlines(keepends=True)
+    # Salto de línea (y una línea vacía) dentro de VC_PERSONAL_DEPENDENCIA, sin comillas, como publica el PTE.
+    partida = f2.replace("GERENCIA DE OBRAS", "GERENCIA\n\nDE OBRAS")
+    reparadas: list[int] = []
+    filas = pte.leer_csv((cab + f1 + partida + f3).encode(), reparadas)
+    assert len(filas) == 3 and reparadas == [3]
+    assert filas[1]["VC_PERSONAL_DEPENDENCIA"] == "GERENCIA DE OBRAS"
+    assert pte.normalizar(filas[1]).total == Decimal("3150.50")
+
+
+def test_fila_no_reparable_falla(csv_sintetico):
+    cab, f1, *_ = csv_sintetico.decode().splitlines(keepends=True)
+    with pytest.raises(pte.FormatoInesperadoError, match="no reparable"):
+        pte.leer_csv((cab + f1 + "1,2,3\n").encode())

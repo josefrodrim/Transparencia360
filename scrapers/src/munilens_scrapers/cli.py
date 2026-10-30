@@ -133,8 +133,22 @@ def procesar_periodo(
     if ext.estado == "sin_datos":
         return ext, None
 
-    registros = [pte.normalizar(f) for f in pte.leer_csv(content)]
+    reparadas: list[int] = []
+    try:
+        registros = [pte.normalizar(f) for f in pte.leer_csv(content, reparadas)]
+    except ValueError as exc:  # incluye FormatoInesperadoError
+        # El RAW queda guardado; se registra el error para que --reanudar lo reintente tras corregir el parser.
+        log.error("fallo de lectura", extra={"ctx": {"periodo": periodo, "error": repr(exc)}})
+        return store.registrar_error(pte.FUENTE, slug, periodo, url, f"lectura: {exc!r}"), None
     reporte = validar(registros, anio, mes, ent["ruc"])
+    if reparadas:
+        reporte.hallazgos.append(
+            Hallazgo(
+                "advertencia",
+                "fila_reparada",
+                f"{len(reparadas)} registros partidos en varias líneas (líneas {reparadas})",
+            )
+        )
     salida = data_dir / "processed" / pte.FUENTE / slug
     escribir_procesado(salida / f"{periodo}.csv", registros, ext, slug)
     (salida / f"{periodo}.calidad.json").write_text(
@@ -217,13 +231,17 @@ def main(argv: list[str] | None = None) -> int:
     ent = cargar_entidad(args.entidad, args.config) if args.entidad else cargar_por_ubigeo(args.ubigeo)
     client = PoliteClient(min_interval_s=args.intervalo)
     store = RawStore(args.data_dir / "raw")
-    previos = {e.periodo: e for e in store.historial(pte.FUENTE, ent["slug"]) if e.estado != "error"}
+    ultimo = {e.periodo: e for e in store.historial(pte.FUENTE, ent["slug"])}  # última entrada por periodo
+    previos = {p: e for p, e in ultimo.items() if e.estado != "error"}
     resultados = []
     for a, m in periodos(args.desde, args.hasta):
         periodo = f"{a:04d}-{m:02d}"
         if args.reanudar and periodo in previos:
-            resultados.append((previos[periodo], cargar_reporte(args.data_dir, ent["slug"], periodo)))
-            continue
+            rep = cargar_reporte(args.data_dir, ent["slug"], periodo)
+            # Un periodo con datos pero sin reporte quedó a medias (p. ej. falló la lectura): se reprocesa.
+            if previos[periodo].estado == "sin_datos" or rep is not None:
+                resultados.append((previos[periodo], rep))
+                continue
         resultados.append(procesar_periodo(client, store, args.data_dir, ent, a, m))
     reporte = args.data_dir / "reports" / f"{pte.FUENTE}_{ent['slug']}_{args.desde}_{args.hasta}.md"
     reporte.parent.mkdir(parents=True, exist_ok=True)

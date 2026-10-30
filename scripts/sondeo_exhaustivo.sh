@@ -11,5 +11,6 @@ while read -r u; do
   [ -z "$u" ] && continue
   i=$((i + 1))
   .venv/bin/munilens-extract --ubigeo "$u" --desde "$desde" --hasta "$hasta" --reanudar 2>> "data/logs/extract_$u.log"
-  echo "$(date '+%F %T') $i/$total $u exit=$?" | tee -a data/logs/exhaustivo.progress
+  rc=$?
+  echo "$(date '+%F %T') $i/$total $u exit=$rc" | tee -a data/logs/exhaustivo.progress
 done < "$lista"
