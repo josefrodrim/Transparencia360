@@ -80,6 +80,12 @@ Hecho y en git:
   elegida por el usuario (`ficha_ciudadana.py 09 datos` → `index_datos.html`, Newsreader + Public Sans + IBM Plex Mono,
   acento ocre): https://claude.ai/artifact/2gaGFPxvRJzKbDFLa8WB6D. Antes de diseñar cualquier página, preguntar el estilo al usuario.
 
+- **Nueva línea (prioridad del usuario desde 2026-10-31): ejecución presupuestal.** MEF 2012–2026 en
+  `data/raw/mef_gasto_devengado/09/` (`munilens-mef --anios 2012,...,2026 --reusar`). `scripts/ejecucion_presupuestal.py 09`
+  → semáforo (90/75/60 %), reincidentes, ritmo del año, gasto de diciembre > 30 %, ranking histórico, obras paradas
+  (PIM ≥ S/ 200 mil y avance ≤ 10 %) con nombre de proyecto. Recursos ordinarios no ejecutados revierten al Tesoro;
+  otras fuentes pasan como saldo de balance (no sumar años salvo RO).
+
 Siguiente:
 - MEF devengado 2024–2026 extraído para las 102 municipalidades; tabla en `docs/mef_gasto_personal_huancavelica.md`
   (subconjuntos RAW en `data/raw/mef_gasto_devengado/09/`, regenerables).

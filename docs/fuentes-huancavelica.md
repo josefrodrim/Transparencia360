@@ -132,6 +132,10 @@
   incluye aportes del empleador, gastos variables, dietas y sentencias, y el devengado no coincide necesariamente con
   el mes de pago. Ascensión (+64 %) y Acobamba (+45 %) muestran la misma diferencia.
 - Son montos agregados por municipalidad: no identifican personas.
+- **Histórico 2012–2026 extraído** (2026-10-31): el MEF publica `{AAAA}-Gasto-Devengado.csv` desde 2012 (2004–2011
+  devuelven 404). Mismas 73 columnas; los años antiguos vienen con comillas. Incluye PIA, PIM, certificado,
+  comprometido, devengado mensual y girado, por proyecto, función y fuente de financiamiento (rubro `00` =
+  recursos ordinarios). Análisis: `scripts/ejecucion_presupuestal.py` → `docs/ejecucion_presupuestal_huancavelica.md`.
 
 ## 4.1 Directorios de funcionarios en gob.pe (VERIFICADO para Lircay, uso manual)
 
