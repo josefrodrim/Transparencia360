@@ -66,6 +66,8 @@ Hecho y en git:
 
 - Perfil de Angaraes (0903): `docs/perfil_angaraes.md`, generado con `scripts/perfil_provincia.py 0903` (cruza
   PTE con MEF; solo agregados). Sirve para cualquier provincia (`0901`, `0907`...).
+- Sueldos de alcaldes (102/102): `docs/sueldos_alcaldes_huancavelica.md` con `scripts/sueldos_alcaldes.py 09`
+  (indicadores MEF `alcalde` = 2.1.1.1.1.1 y `ley_servir` = 2.1.1.1.1.8; contrastado con el PTE).
 
 Siguiente:
 - MEF devengado 2024–2026 extraído para las 102 municipalidades; tabla en `docs/mef_gasto_personal_huancavelica.md`

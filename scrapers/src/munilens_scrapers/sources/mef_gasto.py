@@ -14,6 +14,10 @@ más de un indicador (p. ej. CAS también está dentro de "personal"):
 - cas: 2.1.1.13 "CONTRATO ADMINISTRATIVO DE SERVICIOS". En años anteriores el CAS se registraba en 2.3.2.8; esa
   partida también se cuenta como "cas" (no forma parte de "personal" porque está en bienes y servicios).
 - dietas: 2.1.1.10 "DIETAS" (regidores).
+- alcalde: 2.1.1.1.1.1 "FUNCIONARIOS ELEGIDOS POR ELECCION POLITICA": compensación económica del alcalde (D.S.
+  413-2019-EF). Es la única autoridad elegida con remuneración en una municipalidad (los regidores cobran dietas).
+- ley_servir: 2.1.1.1.1.8 "PERSONAL DE LA LEY SERVIR". Algunas municipalidades registran aquí al alcalde (Ley 30057)
+  en vez de 2.1.1.1.1.1; puede incluir a otros servidores Servir.
 - locacion_pn: 2.3.2.9 "LOCACIÓN DE SERVICIOS REALIZADOS POR PERSONAS NATURALES" (honorarios a personas).
 - pensiones: genérica 2.2 "PENSIONES Y OTRAS PRESTACIONES SOCIALES".
 """
@@ -53,6 +57,8 @@ REQUERIDAS = {
     "GENERICA",
     "SUBGENERICA",
     "SUBGENERICA_DET",
+    "ESPECIFICA",
+    "ESPECIFICA_DET",
     "MONTO_PIM",
     *COLUMNAS_MES,
 }
@@ -89,6 +95,10 @@ def indicadores(fila: dict[str, str]) -> list[str]:
         res.append("personal")
         if (sg, sgd) == ("1", "13"):
             res.append("cas")
+        elif (sg, sgd, fila["ESPECIFICA"], fila["ESPECIFICA_DET"]) == ("1", "1", "1", "1"):
+            res.append("alcalde")
+        elif (sg, sgd, fila["ESPECIFICA"], fila["ESPECIFICA_DET"]) == ("1", "1", "1", "8"):
+            res.append("ley_servir")
         elif (sg, sgd) == ("1", "10"):
             res.append("dietas")
     elif g == "2":

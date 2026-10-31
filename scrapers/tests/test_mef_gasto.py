@@ -22,12 +22,14 @@ CAB = [
     "GENERICA",
     "SUBGENERICA",
     "SUBGENERICA_DET",
+    "ESPECIFICA",
+    "ESPECIFICA_DET",
     "MONTO_PIM",
     *mef.COLUMNAS_MES,
 ]
 
 
-def _fila(niv, dep, g, sg, sgd, enero, febrero="0", tt="2", dist="01"):
+def _fila(niv, dep, g, sg, sgd, enero, febrero="0", tt="2", dist="01", esp="0", espdet="0"):
     return [
         "2026",
         niv,
@@ -42,6 +44,8 @@ def _fila(niv, dep, g, sg, sgd, enero, febrero="0", tt="2", dist="01"):
         g,
         sg,
         sgd,
+        esp,
+        espdet,
         "0",
         enero,
         febrero,
@@ -75,6 +79,8 @@ def test_cabecera_incompleta_falla():
 def test_agrega_indicadores_por_mes():
     filas = [
         _fila("M", "09", "1", "1", "1", "100", "50"),  # personal (planilla)
+        _fila("M", "09", "1", "1", "1", "75", esp="1", espdet="1"),  # alcalde (elegido)
+        _fila("M", "09", "1", "1", "1", "8", esp="1", espdet="8"),  # Ley Servir
         _fila("M", "09", "1", "3", "1", "20"),  # personal (aportes)
         _fila("M", "09", "1", "1", "13", "300"),  # CAS dentro de 2.1 (vigente)
         _fila("M", "09", "1", "1", "10", "5"),  # dietas
@@ -87,7 +93,9 @@ def test_agrega_indicadores_por_mes():
     rows = list(csv.DictReader(_csv(filas)))
     res = {(r["mes"], r["indicador"]): r["devengado"] for r in mef.agregar(rows)}
     assert res == {
-        (1, "personal"): Decimal("425"),
+        (1, "personal"): Decimal("508"),
+        (1, "ley_servir"): Decimal("8"),
+        (1, "alcalde"): Decimal("75"),
         (1, "cas"): Decimal("311"),
         (1, "dietas"): Decimal("5"),
         (1, "locacion_pn"): Decimal("999"),
