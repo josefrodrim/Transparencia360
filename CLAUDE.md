@@ -76,7 +76,9 @@ Hecho y en git:
 - Ficha ciudadana (página web): `scripts/ficha_ciudadana.py 09` (ejecutar desde `scripts/`) → `web/ficha_ciudadana/index.html`
   desde `plantilla.html`. Publicada como artifact privado: https://claude.ai/artifact/4Gjdx4SN9u4hdtTFD6RYyR
   Variante de prueba estilo app de macOS (`ficha_ciudadana.py 09 mac` → `index_mac.html`):
-  https://claude.ai/artifact/Lr3V4HstTCUUKRYBVDtJxs. Antes de diseñar cualquier página, preguntar el estilo al usuario.
+  https://claude.ai/artifact/Lr3V4HstTCUUKRYBVDtJxs (descartada por el usuario). Variante periodismo de datos
+  elegida por el usuario (`ficha_ciudadana.py 09 datos` → `index_datos.html`, Newsreader + Public Sans + IBM Plex Mono,
+  acento ocre): https://claude.ai/artifact/2gaGFPxvRJzKbDFLa8WB6D. Antes de diseñar cualquier página, preguntar el estilo al usuario.
 
 Siguiente:
 - MEF devengado 2024–2026 extraído para las 102 municipalidades; tabla en `docs/mef_gasto_personal_huancavelica.md`

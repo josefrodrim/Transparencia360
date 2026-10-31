@@ -1,0 +1,386 @@
+<title>La Planilla Invisible</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,600;0,6..72,700;1,6..72,400;1,6..72,600&family=Public+Sans:ital,wght@0,400;0,600;0,700;1,400&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<style>
+/* Layout: especial de periodismo de datos. Cabecera de diario, titular, gráfico principal con nota de fuente,
+   buscador que arma una nota por municipalidad, seis hallazgos numerados, tabla de las 102 y metodología. */
+:root {
+  --papel: #fafaf8;        /* blanco de pantalla, sesgo cálido mínimo */
+  --tinta: #15171b;
+  --gris: #5c626b;
+  --filete: #d8d6d0;
+  --tenue: #efeeea;
+  --ocre: #9a5f00;         /* acento: ocre de ichu seco */
+  --ocre-suave: #f6ead4;
+  --rojo: #b42318;
+  --verde: #2d6a46;
+  --serie-a: #1f2a36;      /* publicado / planilla */
+  --serie-b: #c7c3ba;      /* no publicado */
+  --f-titular: "Newsreader", "Iowan Old Style", Georgia, serif;
+  --f-texto: "Public Sans", "Helvetica Neue", Arial, sans-serif;
+  --f-dato: "IBM Plex Mono", ui-monospace, Menlo, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --papel: #121417; --tinta: #ecebe7; --gris: #a3a8b0; --filete: #343840; --tenue: #1b1e23;
+    --ocre: #e3a740; --ocre-suave: #3a2c12; --rojo: #f2867b; --verde: #7cc79a; --serie-a: #dfe4ea; --serie-b: #4a4f57;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --papel: #121417; --tinta: #ecebe7; --gris: #a3a8b0; --filete: #343840; --tenue: #1b1e23;
+  --ocre: #e3a740; --ocre-suave: #3a2c12; --rojo: #f2867b; --verde: #7cc79a; --serie-a: #dfe4ea; --serie-b: #4a4f57;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body { background: var(--papel); color: var(--tinta); font-family: var(--f-texto); font-size: 1.0625rem; line-height: 1.6; }
+.pagina {
+  max-width: 68rem; margin: 0 auto; display: grid; gap: 3rem;
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 1.25rem 4rem;
+}
+.columna { max-width: 42rem; }
+h1, h2, h3 { font-family: var(--f-titular); margin: 0; text-wrap: balance; font-weight: 600; }
+p { margin: 0; }
+.dato { font-family: var(--f-dato); font-variant-numeric: tabular-nums; }
+.antetitulo { font-family: var(--f-dato); font-size: 0.75rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ocre); font-weight: 500; }
+.fuente { font-family: var(--f-dato); font-size: 0.75rem; color: var(--gris); }
+a { color: var(--tinta); text-decoration-color: var(--ocre); text-decoration-thickness: 2px; text-underline-offset: 3px; }
+:focus-visible { outline: 3px solid var(--ocre); outline-offset: 2px; }
+
+/* Cabecera de diario */
+.cabecera { display: grid; gap: 0.6rem; }
+.fecha { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 0.25rem 1rem; border-top: 1px solid var(--tinta); border-bottom: 1px solid var(--filete); padding-block: 0.45rem; font-family: var(--f-dato); font-size: 0.72rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--gris); }
+.cabecera h1 { font-size: clamp(2.3rem, 7vw, 4.6rem); line-height: 1.02; letter-spacing: -0.02em; font-weight: 600; max-width: 18ch; margin-top: 0.75rem; }
+.cabecera h1 s { text-decoration-thickness: 3px; text-decoration-color: var(--ocre); color: var(--gris); font-weight: 400; }
+.cabecera h1 em { color: var(--ocre); font-style: italic; }
+.bajada { font-family: var(--f-titular); font-size: clamp(1.15rem, 2.6vw, 1.45rem); line-height: 1.4; color: var(--tinta); max-width: 40rem; }
+.bajada b { font-weight: 600; }
+.firma { font-size: 0.85rem; color: var(--gris); }
+.firma strong { color: var(--tinta); }
+
+/* Gráfico principal */
+.grafico { display: grid; gap: 0.6rem; border-top: 3px solid var(--tinta); padding-top: 0.9rem; }
+.grafico h2 { font-size: 1.25rem; }
+.barra-total { display: flex; height: 2.4rem; }
+.barra-total span { display: flex; align-items: center; padding: 0 0.6rem; font-family: var(--f-dato); font-size: 0.8rem; white-space: nowrap; overflow: hidden; }
+.barra-total .a { background: var(--serie-a); color: var(--papel); }
+.barra-total .b { background: var(--serie-b); color: var(--tinta); }
+.leyenda { display: flex; flex-wrap: wrap; gap: 0.3rem 1.5rem; font-size: 0.88rem; color: var(--gris); }
+.leyenda i { display: inline-block; width: 0.75rem; height: 0.75rem; margin-right: 0.4rem; vertical-align: -0.08em; }
+
+/* Buscador y nota por municipalidad */
+.busca { display: grid; gap: 0.75rem; border-top: 3px solid var(--tinta); padding-top: 0.9rem; }
+.busca h2 { font-size: clamp(1.5rem, 3.5vw, 2rem); }
+.campo { position: relative; max-width: 34rem; }
+#q { width: 100%; font: inherit; font-size: 1.05rem; padding: 0.75rem 0.9rem; color: var(--tinta); background: var(--papel); border: 0; border-bottom: 2px solid var(--tinta); border-radius: 0; }
+#q::placeholder { color: var(--gris); }
+#sugerencias { list-style: none; margin: 0; padding: 0; position: absolute; left: 0; right: 0; top: 100%; z-index: 5; background: var(--papel); border: 1px solid var(--filete); border-top: 0; max-height: 18rem; overflow-y: auto; box-shadow: 0 10px 24px rgba(0,0,0,0.08); }
+#sugerencias button { width: 100%; text-align: left; font: inherit; color: var(--tinta); background: none; border: 0; padding: 0.55rem 0.9rem; display: flex; justify-content: space-between; gap: 1rem; cursor: pointer; }
+#sugerencias button[aria-selected="true"], #sugerencias button:hover { background: var(--ocre-suave); }
+#sugerencias small { color: var(--gris); font-family: var(--f-dato); font-size: 0.75rem; }
+.atajos { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+.atajos button { font: inherit; font-size: 0.85rem; color: var(--tinta); background: var(--tenue); border: 0; padding: 0.3rem 0.7rem; border-radius: 999px; cursor: pointer; }
+.atajos button:hover { background: var(--ocre-suave); }
+
+.nota { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 18rem); gap: 2rem 3rem; padding-top: 1.25rem; border-top: 1px solid var(--filete); }
+.nota > div { min-width: 0; display: grid; gap: 1rem; align-content: start; }
+.nota h3 { font-size: clamp(1.6rem, 4vw, 2.4rem); line-height: 1.1; letter-spacing: -0.01em; }
+.nota .lead { font-family: var(--f-titular); font-size: 1.2rem; line-height: 1.5; }
+.nota p { max-width: 65ch; }
+.ficha-datos { border-top: 3px solid var(--ocre); background: var(--tenue); padding: 1rem 1.1rem; display: grid; gap: 0.85rem; align-content: start; }
+.ficha-datos h4 { margin: 0; font-family: var(--f-dato); font-size: 0.72rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--gris); font-weight: 500; }
+.cifra { display: grid; gap: 0.1rem; }
+.cifra b { font-family: var(--f-dato); font-variant-numeric: tabular-nums; font-size: 1.45rem; font-weight: 600; line-height: 1.2; }
+.cifra span { font-size: 0.85rem; color: var(--gris); }
+.mini { display: flex; height: 0.5rem; background: var(--serie-b); margin-top: 0.3rem; }
+.mini i { display: block; height: 100%; background: var(--serie-a); }
+.alerta { border-left: 3px solid var(--ocre); padding-left: 0.85rem; display: grid; gap: 0.2rem; }
+.alerta strong { font-weight: 700; }
+.estado { display: inline-block; font-family: var(--f-dato); font-size: 0.72rem; letter-spacing: 0.08em; text-transform: uppercase; padding: 0.15rem 0.5rem; border: 1px solid currentColor; }
+.estado.bien { color: var(--verde); } .estado.medias { color: var(--ocre); } .estado.mal { color: var(--rojo); }
+
+/* Hallazgos numerados */
+.hallazgos { display: grid; gap: 1rem; border-top: 3px solid var(--tinta); padding-top: 0.9rem; }
+.hallazgos > h2 { font-size: clamp(1.5rem, 3.5vw, 2rem); }
+.grilla { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 19rem), 1fr)); gap: 0; border-left: 1px solid var(--filete); }
+.grilla article { border-right: 1px solid var(--filete); border-bottom: 1px solid var(--filete); padding: 1.1rem 1.2rem 1.3rem; display: grid; gap: 0.55rem; align-content: start; min-width: 0; }
+.grilla h3 { font-size: 1.3rem; line-height: 1.2; }
+.grilla p { font-size: 0.97rem; }
+.grilla .cita { background: var(--ocre-suave); padding: 0.55rem 0.7rem; font-family: var(--f-dato); font-size: 0.8rem; line-height: 1.5; }
+
+/* Tabla */
+.tabla { display: grid; gap: 0.75rem; border-top: 3px solid var(--tinta); padding-top: 0.9rem; }
+.tabla h2 { font-size: clamp(1.5rem, 3.5vw, 2rem); }
+.desliza { overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
+th { font-family: var(--f-dato); font-size: 0.7rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--gris); font-weight: 500; text-align: left; border-bottom: 1px solid var(--tinta); padding: 0; white-space: nowrap; }
+th button { font: inherit; letter-spacing: inherit; text-transform: inherit; color: inherit; background: none; border: 0; padding: 0.5rem 0.6rem; cursor: pointer; width: 100%; text-align: inherit; }
+th[aria-sort] button { color: var(--tinta); }
+td { padding: 0.5rem 0.6rem; border-bottom: 1px solid var(--filete); white-space: nowrap; }
+td.n, th.n { text-align: right; }
+td.n { font-family: var(--f-dato); font-variant-numeric: tabular-nums; }
+tbody tr { cursor: pointer; }
+tbody tr:hover { background: var(--tenue); }
+tbody tr[aria-current="true"] { background: var(--ocre-suave); }
+.punt { display: inline-flex; align-items: center; gap: 0.45rem; justify-content: flex-end; }
+.punt i { display: block; height: 0.45rem; width: 3.5rem; background: var(--serie-b); position: relative; }
+.punt i::after { content: ""; position: absolute; inset: 0 auto 0 0; width: var(--p); background: var(--serie-a); }
+
+/* Metodología */
+.metodo { border-top: 1px solid var(--tinta); padding-top: 1rem; display: grid; gap: 0.75rem; font-size: 0.92rem; color: var(--gris); }
+.metodo h2 { font-size: 1.15rem; color: var(--tinta); }
+.metodo ul { margin: 0; padding-left: 1.1rem; display: grid; gap: 0.35rem; max-width: 70ch; }
+
+@media (max-width: 760px) {
+  .nota { grid-template-columns: minmax(0, 1fr); }
+  .pagina { gap: 2.25rem; }
+}
+@media (prefers-reduced-motion: no-preference) {
+  .nota.entra { animation: entra 0.25s ease-out; }
+  @keyframes entra { from { opacity: 0.2; } to { opacity: 1; } }
+}
+</style>
+
+<div class="pagina">
+  <header class="cabecera">
+    <div class="fecha"><span>Planilla Abierta · Investigación de datos</span><span id="fecha"></span></div>
+    <span class="antetitulo">Huancavelica · Personal municipal</span>
+    <h1>La mitad del gasto en personal de Huancavelica es <s>pública</s> <em>invisible</em></h1>
+    <p class="bajada" id="bajada"></p>
+    <p class="firma">Por <strong>MuniLens</strong> · Datos del MEF, el INEI y el Portal de Transparencia · Sin nombres de trabajadores</p>
+  </header>
+
+  <section class="grafico" aria-labelledby="t-grafico">
+    <h2 id="t-grafico">Gasto en personal de las 102 municipalidades en 2025, según si publican sueldos</h2>
+    <div class="barra-total" id="barra-total" role="img"></div>
+    <div class="leyenda"><span><i style="background:var(--serie-a)"></i>Publican algún sueldo</span><span><i style="background:var(--serie-b)"></i>No publican ningún sueldo</span></div>
+    <p class="fuente">Fuente: MEF, gasto devengado 2025, genérica 2.1 (personal y obligaciones sociales). Publicación: Portal de Transparencia Estándar, enero 2024 a octubre 2026.</p>
+  </section>
+
+  <section class="busca" aria-labelledby="t-busca">
+    <span class="antetitulo">Tu municipalidad</span>
+    <h2 id="t-busca">¿Cuánto cuesta el personal de tu municipalidad?</h2>
+    <div class="campo" role="search">
+      <label for="q" class="fuente">Escribe el nombre de tu distrito o provincia</label>
+      <input id="q" type="search" autocomplete="off" placeholder="Por ejemplo, Lircay, Yauli o Pampas" aria-controls="sugerencias">
+      <ul id="sugerencias" role="listbox" hidden></ul>
+    </div>
+    <div class="atajos" id="atajos" aria-label="Accesos rápidos"></div>
+    <article class="nota" id="nota" aria-live="polite"></article>
+  </section>
+
+  <section class="hallazgos" aria-labelledby="t-hallazgos">
+    <span class="antetitulo">Lo que muestran los datos</span>
+    <h2 id="t-hallazgos">Seis hallazgos</h2>
+    <div class="grilla" id="grilla"></div>
+  </section>
+
+  <section class="tabla" aria-labelledby="t-tabla">
+    <span class="antetitulo">Todas las municipalidades</span>
+    <h2 id="t-tabla">Las 102, una por una</h2>
+    <p class="fuente">Toca una fila para leer su nota. Toca un encabezado para ordenar.</p>
+    <div class="desliza"><table><thead id="cabeza"></thead><tbody id="filas"></tbody></table></div>
+  </section>
+
+  <footer class="metodo">
+    <h2>Cómo se hizo</h2>
+    <ul>
+      <li><strong>Sueldo del alcalde:</strong> MEF, devengado mensual, partida «Funcionarios elegidos por elección política» (o Ley Servir, donde lo registran ahí). El monto lo fija el D.S. 413-2019-EF. Bruto.</li>
+      <li><strong>Gasto en personal:</strong> MEF, genérica 2.1 en 2025 (incluye aportes del empleador, alcalde y dietas). La locación de servicios a personas (2.3.2.9) va aparte.</li>
+      <li><strong>Personas:</strong> lo que cada municipalidad declaró al INEI al 31/12/2025 (RENAMU 2026).</li>
+      <li><strong>Transparencia:</strong> puntaje de 0 a 100 por meses publicados en el Portal de Transparencia, completitud frente al MEF, actualidad, demora y errores.</li>
+      <li><strong>Alertas:</strong> indicios para revisar, no pruebas de irregularidad. Cada nota indica sus posibles explicaciones.</li>
+      <li>Cualquier persona puede pedir esta información a su municipalidad con la Ley 27806; es gratuita salvo el costo de las copias.</li>
+    </ul>
+    <p class="fuente" id="corte"></p>
+  </footer>
+</div>
+
+<script>
+const DATOS = /*__DATOS__*/null;
+const M = DATOS.municipalidades;
+const porUbigeo = Object.fromEntries(M.map(m => [m.ubigeo, m]));
+const $ = s => document.querySelector(s);
+const soles = n => n == null ? "—" : "S/ " + Math.round(n).toLocaleString("es-PE").replace(/,/g, " ");
+const millones = n => n >= 1e6 ? "S/ " + (n / 1e6).toFixed(1).replace(".", ",").replace(",0", "") + " millones" : soles(n);
+const pct = (a, b) => Math.round(100 * a / b);
+const sinTildes = s => s.normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase();
+const corto = m => m.nombre.replace("Municipalidad Provincial de ", "la Provincial de ").replace("Municipalidad Distrital de ", "");
+const titulo = m => { const c = corto(m); return c.charAt(0).toUpperCase() + c.slice(1); };
+const esc = s => String(s).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]);
+const MESES = ["enero", "febrero", "marzo", "abril", "mayo", "junio", "julio", "agosto", "septiembre", "octubre", "noviembre", "diciembre"];
+const mesTexto = p => { if (!p) return "—"; const [a, m] = p.split("-"); return MESES[+m - 1] + " de " + a; };
+const fechaTexto = iso => { const [a, m, d] = iso.split("-"); return `${+d} de ${MESES[+m - 1]} de ${a}`; };
+
+function nivel(m) {
+  const t = m.transparencia;
+  if (t.meses === 0) return { clase: "mal", texto: "No publica" };
+  if (t.puntaje >= 66) return { clase: "bien", texto: "Publica" };
+  if (t.puntaje >= 20) return { clase: "medias", texto: "Publica a medias" };
+  return { clase: "mal", texto: "Publica muy poco" };
+}
+
+// Cifras generales
+const total = M.reduce((s, m) => s + (m.gasto_2025.personal || 0), 0);
+const noPub = M.filter(m => m.transparencia.meses === 0);
+const gastoNoPub = noPub.reduce((s, m) => s + (m.gasto_2025.personal || 0), 0);
+$("#fecha").textContent = "Datos al " + fechaTexto(DATOS.corte.pte);
+$("#bajada").innerHTML = `<b>${noPub.length} de ${M.length}</b> municipalidades no publicaron el sueldo de ninguno de sus trabajadores entre 2024 y 2026. Juntas gastaron <b>${millones(gastoNoPub)}</b> en personal en 2025. Busca la tuya.`;
+const pa = pct(total - gastoNoPub, total);
+$("#barra-total").innerHTML = `<span class="a" style="width:${pa}%">${pa} % · ${millones(total - gastoNoPub)}</span><span class="b" style="width:${100 - pa}%">${100 - pa} % · ${millones(gastoNoPub)}</span>`;
+$("#barra-total").setAttribute("aria-label", `Publican: ${pa} por ciento del gasto. No publican: ${100 - pa} por ciento.`);
+$("#corte").textContent = `Cortes: MEF ${fechaTexto(DATOS.corte.mef)} · Portal de Transparencia ${fechaTexto(DATOS.corte.pte)} · INEI ${fechaTexto(DATOS.corte.renamu)}. Proyecto MuniLens.`;
+
+// Nota por municipalidad
+function titular(m) {
+  const t = m.transparencia, n = nivel(m);
+  if (t.meses === 0) return `${titulo(m)} gastó ${millones(m.gasto_2025.personal)} en personal y no publicó un solo sueldo`;
+  if (n.clase === "bien") return `${titulo(m)} publica los sueldos de su personal y obtiene ${t.puntaje} de 100`;
+  return `${titulo(m)} publicó sueldos solo ${t.meses} de ${t.meses_posibles} meses`;
+}
+function nota(m) {
+  const ref = DATOS.referencias[m.tipo] || {}, g = m.gasto_2025, t = m.transparencia, r = m.renamu, n = nivel(m);
+  const loc = g.locacion_pn || 0, plan = g.personal || 0;
+  const comp = ref.alcalde ? (m.alcalde.mensual > ref.alcalde * 1.05 ? "más que" : m.alcalde.mensual < ref.alcalde * 0.95 ? "menos que" : "lo mismo que") : "";
+  const aprox = m.alcalde.fuente === "Servir" ? " (cifra aproximada: el MEF lo registra en la partida de la Ley Servir)" : "";
+  const parrafoPub = t.meses === 0
+    ? `Entre enero de 2024 y octubre de 2026 no subió al Portal de Transparencia la lista de su personal con sueldos${t.ficha_pte ? ", aunque tiene su página en el portal" : ""}.`
+    : `Publicó la lista de su personal ${t.meses} de ${t.meses_posibles} meses; la última, de ${mesTexto(t.ultimo)}.${t.cobertura != null ? ` Lo publicado equivale al ${t.cobertura} % de lo que el MEF registra como gasto en planilla; una lista completa ronda el 80 %.` : ""}`;
+  const parrafoPte = m.pte ? ` En esa última lista figuran ${m.pte.personas} personas; la del medio gana ${soles(m.pte.mediana)} y los sueldos van de ${soles(m.pte.minimo)} a ${soles(m.pte.maximo)}.` : "";
+  const parrafoGente = r.tiene_personal === "no"
+    ? `Al INEI le declaró que no tiene personal en planilla${r.locacion ? `, y ${r.locacion} personas contratadas por locación de servicios` : ""}.`
+    : `Al INEI le declaró ${r.total ?? "—"} personas en planilla al cierre de 2025${r.cas != null ? `, ${r.cas} de ellas bajo contrato CAS` : ""}${r.locacion != null ? `, y ${r.locacion} más por locación de servicios` : ""}.`;
+  const parrafoLoc = loc ? ` Aparte, pagó ${soles(loc)} a personas por locación de servicios, que no figuran como personal${loc > plan ? ": más que toda su planilla" : ""}.` : "";
+  const enlace = t.id_pte ? `<p><a href="https://www.transparencia.gob.pe/enlaces/pte_transparencia_enlaces.aspx?id_entidad=${encodeURIComponent(t.id_pte)}" target="_blank" rel="noopener">Ver su página en el Portal de Transparencia</a></p>` : "";
+  const alertas = m.alertas.length
+    ? m.alertas.map(a => `<div class="alerta"><strong>${esc(a.titulo)}</strong><span class="fuente">${esc(a.detalle)}</span><span>Puede deberse a: ${esc(a.posible)}</span></div>`).join("")
+    : `<p>Con los datos disponibles no aparece ninguna señal de alerta.</p>`;
+  return `
+    <div>
+      <span class="antetitulo">${m.tipo === "provincial" ? "Municipalidad provincial" : "Municipalidad distrital"} · Provincia de ${esc(m.provincia)}</span>
+      <h3>${esc(titular(m))}</h3>
+      <p class="lead">El alcalde gana ${soles(m.alcalde.mensual)} brutos al mes${aprox}${comp ? `, ${comp} el alcalde ${m.tipo} típico de Huancavelica (${soles(ref.alcalde)})` : ""}. El monto no lo decide el concejo: lo fija el Estado.</p>
+      <p>En 2025 la municipalidad gastó ${soles(plan)} en su planilla, de los cuales ${soles(g.cas)} fueron para trabajadores CAS y ${soles(g.dietas)} para las dietas de los regidores.${parrafoLoc}${m.variacion_2026 != null ? ` De enero a septiembre de 2026 su gasto en planilla ${m.variacion_2026 >= 0 ? "subió" : "bajó"} ${Math.abs(m.variacion_2026)} % respecto del mismo periodo de 2025.` : ""}</p>
+      <p>${parrafoGente}</p>
+      <p>${parrafoPub}${parrafoPte}</p>
+      ${enlace}
+      <span class="antetitulo">Alertas</span>
+      ${alertas}
+    </div>
+    <aside class="ficha-datos" aria-label="Datos clave">
+      <h4>Datos clave</h4>
+      <div class="cifra"><b>${soles(m.alcalde.mensual)}</b><span>sueldo mensual del alcalde</span></div>
+      <div class="cifra"><b>${millones(plan)}</b><span>planilla 2025</span></div>
+      <div class="cifra"><b>${soles(loc)}</b><span>locación de servicios 2025</span>
+        <div class="mini" role="img" aria-label="Planilla frente a locación"><i style="width:${pct(plan, plan + loc || 1)}%"></i></div></div>
+      <div class="cifra"><b>${t.puntaje}/100</b><span>transparencia · <span class="estado ${n.clase}">${n.texto}</span></span></div>
+      <div class="cifra"><b>${m.alertas.length}</b><span>${m.alertas.length === 1 ? "alerta" : "alertas"}</span></div>
+      <p class="fuente">MEF 2025 · INEI RENAMU 2026 · Portal de Transparencia. Ubigeo ${m.ubigeo}.</p>
+    </aside>`;
+}
+
+let actual = "090301";
+function mostrar(u, desplazar) {
+  if (!porUbigeo[u]) return;
+  actual = u;
+  const el = $("#nota");
+  el.classList.remove("entra"); void el.offsetWidth; el.classList.add("entra");
+  el.innerHTML = nota(porUbigeo[u]);
+  pintarTabla();
+  try { history.replaceState(null, "", "#" + u); } catch (e) {}
+  if (desplazar) el.scrollIntoView({ behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth", block: "start" });
+}
+
+// Accesos rápidos: capitales de provincia
+$("#atajos").innerHTML = M.filter(m => m.tipo === "provincial").map(m =>
+  `<button type="button" data-u="${m.ubigeo}">${esc(m.provincia)}</button>`).join("");
+$("#atajos").addEventListener("click", e => { const b = e.target.closest("[data-u]"); if (b) mostrar(b.dataset.u, false); });
+
+// Buscador
+let res = [], sel = -1;
+function buscar() {
+  const q = sinTildes($("#q").value.trim()), lista = $("#sugerencias");
+  if (!q) { lista.hidden = true; res = []; return; }
+  res = M.filter(m => sinTildes(m.nombre).includes(q) || sinTildes(m.provincia).includes(q) || m.ubigeo.startsWith(q)).slice(0, 12);
+  sel = res.length ? 0 : -1;
+  lista.innerHTML = res.length ? res.map((m, i) => `<li><button type="button" role="option" data-u="${m.ubigeo}" aria-selected="${i === 0}">${esc(titulo(m))}<small>${esc(m.provincia)}</small></button></li>`).join("")
+    : `<li><button type="button" disabled>Sin coincidencias. Prueba con el nombre del distrito.</button></li>`;
+  lista.hidden = false;
+}
+const elegir = u => { $("#sugerencias").hidden = true; $("#q").value = ""; mostrar(u, true); };
+$("#q").addEventListener("input", buscar);
+$("#q").addEventListener("keydown", e => {
+  if ($("#sugerencias").hidden || !res.length) return;
+  if (e.key === "ArrowDown" || e.key === "ArrowUp") {
+    e.preventDefault(); sel = (sel + (e.key === "ArrowDown" ? 1 : -1) + res.length) % res.length;
+    document.querySelectorAll("#sugerencias [role=option]").forEach((b, i) => b.setAttribute("aria-selected", i === sel));
+  } else if (e.key === "Enter" && sel >= 0) { e.preventDefault(); elegir(res[sel].ubigeo); }
+  else if (e.key === "Escape") $("#sugerencias").hidden = true;
+});
+$("#sugerencias").addEventListener("click", e => { const b = e.target.closest("[data-u]"); if (b) elegir(b.dataset.u); });
+document.addEventListener("click", e => { if (!e.target.closest(".campo")) $("#sugerencias").hidden = true; });
+
+// Seis hallazgos, calculados de los datos
+(function () {
+  const pub = M.filter(m => m.transparencia.meses > 0).sort((a, b) => b.transparencia.puntaje - a.transparencia.puntaje);
+  const buenas = pub.filter(m => m.transparencia.puntaje >= 66);
+  const con = t => M.filter(m => m.alertas.some(a => a.titulo.startsWith(t)));
+  const locMayor = con("Paga más en locación");
+  const salto = con("Gasto en personal 2026");
+  const atrasos = con("Pagos al alcalde");
+  const sinPers = con("Declara al INEI no tener");
+  const alc = M.map(m => m.alcalde.mensual).filter(Boolean);
+  const maxAlc = M.reduce((a, b) => (b.alcalde.mensual > a.alcalde.mensual ? b : a));
+  const peorLoc = locMayor.reduce((a, b) => (b.gasto_2025.locacion_pn / b.gasto_2025.personal > a.gasto_2025.locacion_pn / a.gasto_2025.personal ? b : a), locMayor[0]);
+  const mayorSalto = salto.reduce((a, b) => (b.variacion_2026 > a.variacion_2026 ? b : a), salto[0]);
+  const celdas = [
+    ["01 · Quién cumple", `Solo ${buenas.length} municipalidades publican sus sueldos de forma útil`,
+      `${titulo(buenas[0])}${buenas.slice(1).map(m => ", " + corto(m)).join("")} superan los 66 puntos. ${titulo(pub[0])} es la única que publicó los ${pub[0].transparencia.meses} meses.`,
+      `${pub.length} publican algo · ${noPub.length} no publican nada`],
+    ["02 · Personal invisible", `${locMayor.length} distritos pagan más en locadores que en toda su planilla`,
+      `Las personas contratadas por locación de servicios no figuran en la lista de personal. Aunque estas municipalidades publicaran, la mayoría de quienes trabajan para ellas seguiría sin verse.`,
+      peorLoc ? `${titulo(peorLoc)}: locación ${(peorLoc.gasto_2025.locacion_pn / peorLoc.gasto_2025.personal).toFixed(1).replace(".", ",")} veces su planilla` : ""],
+    ["03 · Año electoral", `${salto.length} municipalidades suben su planilla más de 25 % en 2026`,
+      `2026 es año de elecciones municipales. El aumento puede deberse a normas o plazas nuevas, pero conviene revisarlo.`,
+      mayorSalto ? `${titulo(mayorSalto)}: +${mayorSalto.variacion_2026} % de enero a septiembre` : ""],
+    ["04 · Pagos atrasados", `${atrasos.length} municipalidades pagan al alcalde a destiempo`,
+      `Meses en cero seguidos de pagos dobles o triples. Muestran desorden en la gestión de la planilla, no necesariamente un perjuicio.`,
+      `Criterio: 6 o más meses irregulares entre 2025 y 2026`],
+    ["05 · Cuánto gana un alcalde", `Entre ${soles(Math.min(...alc))} y ${soles(Math.max(...alc))} al mes`,
+      `El monto lo fija el Estado según la municipalidad (D.S. 413-2019-EF). El alcalde distrital típico gana ${soles(DATOS.referencias.distrital.alcalde)}; el provincial, ${soles(DATOS.referencias.provincial.alcalde)}.`,
+      `Más alto: ${corto(maxAlc)}, ${soles(maxAlc.alcalde.mensual)}`],
+    ["06 · Lo que dicen al INEI", `${sinPers.length} municipalidades declararon no tener personal`,
+      `Aun así, el MEF les registra pagos a trabajadores CAS en 2025. Puede ser un error al llenar el formulario del INEI.`,
+      sinPers.map(titulo).join(" · ")],
+  ];
+  $("#grilla").innerHTML = celdas.map(([ante, h, p, cita]) => `<article><span class="antetitulo">${esc(ante)}</span><h3>${esc(h)}</h3><p>${esc(p)}</p>${cita ? `<p class="cita">${esc(cita)}</p>` : ""}</article>`).join("");
+})();
+
+// Tabla
+const cols = [
+  ["nombre", "Municipalidad", m => titulo(m), false], ["provincia", "Provincia", m => m.provincia, false],
+  ["alcalde", "Alcalde/mes", m => m.alcalde.mensual, true], ["planilla", "Planilla 2025", m => m.gasto_2025.personal, true],
+  ["locacion", "Locación 2025", m => m.gasto_2025.locacion_pn, true], ["puntaje", "Transparencia", m => m.transparencia.puntaje, true],
+  ["alertas", "Alertas", m => m.alertas.length, true],
+];
+let orden = { k: "planilla", desc: true };
+function pintarTabla() {
+  const c = cols.find(x => x[0] === orden.k);
+  $("#cabeza").innerHTML = `<tr>${cols.map(([k, t, , n]) => `<th class="${n ? "n" : ""}" ${k === orden.k ? `aria-sort="${orden.desc ? "descending" : "ascending"}"` : ""}><button type="button" data-k="${k}">${t}${k === orden.k ? (orden.desc ? " ↓" : " ↑") : ""}</button></th>`).join("")}</tr>`;
+  const filas = [...M].sort((a, b) => { const x = c[2](a), y = c[2](b); const r = typeof x === "string" ? x.localeCompare(y, "es") : (x ?? -1) - (y ?? -1); return orden.desc ? -r : r; });
+  $("#filas").innerHTML = filas.map(m => `<tr data-u="${m.ubigeo}" tabindex="0" aria-current="${m.ubigeo === actual}">
+    <td>${esc(titulo(m))}</td><td>${esc(m.provincia)}</td><td class="n">${soles(m.alcalde.mensual)}</td>
+    <td class="n">${soles(m.gasto_2025.personal)}</td><td class="n">${soles(m.gasto_2025.locacion_pn)}</td>
+    <td class="n"><span class="punt"><i style="--p:${m.transparencia.puntaje}%"></i>${m.transparencia.puntaje}</span></td>
+    <td class="n">${m.alertas.length || "—"}</td></tr>`).join("");
+}
+$("#cabeza").addEventListener("click", e => { const b = e.target.closest("[data-k]"); if (!b) return; const k = b.dataset.k; orden = { k, desc: orden.k === k ? !orden.desc : !["nombre", "provincia"].includes(k) }; pintarTabla(); });
+$("#filas").addEventListener("click", e => { const tr = e.target.closest("tr[data-u]"); if (tr) mostrar(tr.dataset.u, true); });
+$("#filas").addEventListener("keydown", e => { if (e.key === "Enter") { const tr = e.target.closest("tr[data-u]"); if (tr) mostrar(tr.dataset.u, true); } });
+
+const inicial = (location.hash || "").replace("#", "");
+mostrar(porUbigeo[inicial] ? inicial : "090301", false);
+</script>
