@@ -142,7 +142,7 @@
 - **Sirve para saber quién ocupa cada cargo, pero no trae salarios.** Se cruza por nombre con el PTE Personal.
 - **Contiene datos personales sensibles** (DNI, celulares, correos personales y domicilios de las autoridades). Solo se
   toman el nombre y el cargo; los archivos descargados no se guardan y nunca se versionan.
-- Cruce de Lircay (2026-10-31): de las 27 personas del directorio (34 cargos), 6 coinciden por nombre con alguien publicado en el
+- Cruce de Lircay (2026-10-31): de las 26 personas del directorio (34 cargos), 6 coinciden por nombre con alguien publicado en el
   PTE de 2024 (S/ 3 000–4 000 mensuales, CAS); los demás, incluidos el gerente municipal y el alcalde, nunca
   aparecieron en el PTE.
 
