@@ -1,0 +1,393 @@
+<title>Ejecución Presupuestal Huancavelica</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700;900&family=Roboto+Condensed:wght@500;700&family=Roboto+Mono:wght@500&display=swap">
+<style>
+/* Layout: tablero de resultados oficiales. Banda institucional, filtros de ámbito y año, barra de avance,
+   tarjetas de totales, conteo por municipalidad en barras con donut de semáforo al costado, evolución,
+   funciones y obras paradas. */
+:root {
+  --fondo: #eef1f5;
+  --hoja: #ffffff;
+  --tinta: #1b2533;
+  --gris: #5b6675;
+  --linea: #dbe0e7;
+  --banda: #0b2a52;          /* azul institucional */
+  --banda-2: #123a6e;
+  --banda-texto: #ffffff;
+  --rojo-inst: #c8102e;      /* filete institucional */
+  --verde: #1f8a4c; --amarillo: #e0a800; --naranja: #e8710a; --rojo: #d0312d;
+  --pista: #e6e9ee;
+  --f-base: "Roboto", "Helvetica Neue", Arial, sans-serif;
+  --f-cond: "Roboto Condensed", "Arial Narrow", Arial, sans-serif;
+  --f-mono: "Roboto Mono", ui-monospace, Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --fondo: #0f141b; --hoja: #18202b; --tinta: #e7ebf0; --gris: #a2acb8; --linea: #2c3644;
+    --banda: #0a1e3a; --banda-2: #12305a; --rojo-inst: #e5485e;
+    --verde: #3fbf73; --amarillo: #f2c230; --naranja: #ff9440; --rojo: #ff6b63; --pista: #2a3340;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --fondo: #0f141b; --hoja: #18202b; --tinta: #e7ebf0; --gris: #a2acb8; --linea: #2c3644;
+  --banda: #0a1e3a; --banda-2: #12305a; --rojo-inst: #e5485e;
+  --verde: #3fbf73; --amarillo: #f2c230; --naranja: #ff9440; --rojo: #ff6b63; --pista: #2a3340;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body { background: var(--fondo); color: var(--tinta); font-family: var(--f-base); font-size: 15px; line-height: 1.45; }
+.interior {
+  max-width: 76rem; margin: 0 auto;
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px));
+}
+.num { font-variant-numeric: tabular-nums; }
+h1, h2, h3 { margin: 0; font-family: var(--f-cond); font-weight: 700; text-wrap: balance; }
+:focus-visible { outline: 3px solid var(--rojo-inst); outline-offset: 2px; }
+
+/* Banda institucional */
+.banda { background: var(--banda); color: var(--banda-texto); border-bottom: 4px solid var(--rojo-inst); }
+.banda .interior { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 0.5rem 1.5rem; padding-block: 0.9rem; }
+.marca { display: flex; align-items: center; gap: 0.75rem; min-width: 0; }
+.sello { width: 2.6rem; height: 2.6rem; border-radius: 50%; border: 2px solid currentColor; display: grid; place-items: center; font: 700 0.8rem var(--f-cond); letter-spacing: 0.04em; flex: none; }
+.marca div { min-width: 0; }
+.marca small { display: block; font-size: 0.72rem; letter-spacing: 0.12em; text-transform: uppercase; opacity: 0.8; }
+.marca h1 { font-size: clamp(1.15rem, 3vw, 1.6rem); line-height: 1.15; }
+.corte { font-size: 0.8rem; opacity: 0.85; }
+
+/* Filtros */
+.filtros { background: var(--banda-2); color: var(--banda-texto); }
+.filtros .interior { display: flex; flex-wrap: wrap; gap: 0.6rem 1.25rem; padding-block: 0.7rem; align-items: end; }
+.filtros label { display: grid; gap: 0.2rem; font-size: 0.72rem; letter-spacing: 0.08em; text-transform: uppercase; opacity: 0.95; min-width: 0; }
+.filtros select { font: 500 0.95rem var(--f-base); color: var(--tinta); background: var(--hoja); border: 0; border-radius: 4px; padding: 0.45rem 0.6rem; max-width: 100%; }
+#f-muni { min-width: 0; width: 16rem; max-width: 100%; }
+
+main.interior { display: grid; gap: 1.25rem; padding-block: 1.25rem 3rem; }
+.panel { background: var(--hoja); border: 1px solid var(--linea); border-radius: 6px; padding: 1rem 1.15rem; min-width: 0; }
+.panel > h2 { font-size: 1.1rem; text-transform: uppercase; letter-spacing: 0.03em; border-bottom: 2px solid var(--banda); padding-bottom: 0.45rem; margin-bottom: 0.85rem; display: flex; justify-content: space-between; gap: 1rem; flex-wrap: wrap; align-items: baseline; }
+.panel > h2 small { font: 400 0.8rem var(--f-base); text-transform: none; letter-spacing: 0; color: var(--gris); }
+
+/* Avance */
+.avance { display: grid; gap: 0.6rem; }
+.avance-cab { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 0.25rem 1rem; }
+.avance-cab .etq { font: 700 0.85rem var(--f-cond); letter-spacing: 0.08em; text-transform: uppercase; color: var(--gris); }
+.avance-cab .pct { font: 900 clamp(2.4rem, 7vw, 3.4rem) var(--f-base); line-height: 1; font-variant-numeric: tabular-nums; }
+.avance-cab .de { color: var(--gris); font-size: 0.95rem; }
+.barra-avance { height: 1.6rem; background: var(--pista); border-radius: 3px; overflow: hidden; position: relative; }
+.barra-avance span { display: block; height: 100%; transition: width 0.5s ease; }
+.marcas { display: flex; justify-content: space-between; font-size: 0.72rem; color: var(--gris); }
+
+/* Tarjetas */
+.tarjetas { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 12rem), 1fr)); gap: 0.75rem; }
+.tarjeta { background: var(--hoja); border: 1px solid var(--linea); border-top: 4px solid var(--banda); border-radius: 6px; padding: 0.8rem 0.95rem; display: grid; gap: 0.15rem; }
+.tarjeta.alerta { border-top-color: var(--rojo-inst); }
+.tarjeta span { font-size: 0.75rem; letter-spacing: 0.06em; text-transform: uppercase; color: var(--gris); }
+.tarjeta b { font: 700 1.5rem var(--f-base); font-variant-numeric: tabular-nums; }
+.tarjeta small { color: var(--gris); font-size: 0.8rem; }
+
+/* Conteo + semáforo */
+.dos { display: grid; grid-template-columns: minmax(0, 2fr) minmax(0, 1fr); gap: 1.25rem; align-items: start; }
+.lado { display: grid; gap: 1.25rem; }
+.orden { display: flex; gap: 0; border: 1px solid var(--linea); border-radius: 4px; overflow: hidden; }
+.orden button { font: 500 0.8rem var(--f-base); border: 0; background: var(--hoja); color: var(--tinta); padding: 0.35rem 0.7rem; cursor: pointer; }
+.orden button[aria-pressed="true"] { background: var(--banda); color: var(--banda-texto); }
+.conteo { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.15rem; max-height: 38rem; overflow-y: auto; }
+.conteo li button {
+  width: 100%; display: grid; grid-template-columns: 1.9rem minmax(0, 1fr) 4rem; grid-template-rows: auto auto; gap: 0.15rem 0.6rem;
+  align-items: center; text-align: left; font: inherit; color: inherit; background: none; border: 0; border-bottom: 1px solid var(--linea);
+  padding: 0.5rem 0.3rem; cursor: pointer;
+}
+.conteo li button:hover { background: var(--fondo); }
+.conteo .pos { grid-row: 1 / 3; font: 700 0.9rem var(--f-cond); color: var(--gris); text-align: center; }
+.conteo .nom { display: flex; align-items: center; gap: 0.45rem; min-width: 0; font-weight: 500; }
+.conteo .nom em { font-style: normal; color: var(--gris); font-size: 0.8rem; font-weight: 400; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.conteo .nom strong { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-weight: 500; }
+.chip { width: 0.8rem; height: 0.8rem; border-radius: 2px; flex: none; }
+.conteo .pct { grid-row: 1 / 3; grid-column: 3; text-align: right; font: 700 1.1rem var(--f-base); font-variant-numeric: tabular-nums; }
+.conteo .pista { grid-column: 2; height: 0.7rem; background: var(--pista); border-radius: 2px; overflow: hidden; display: flex; }
+.conteo .pista span { display: block; height: 100%; }
+.conteo .det { grid-column: 2; font-size: 0.78rem; color: var(--gris); }
+
+.donut { display: grid; grid-template-columns: 9.5rem minmax(0, 1fr); gap: 1rem; align-items: center; }
+.donut svg { width: 100%; height: auto; }
+.leyenda { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.4rem; font-size: 0.88rem; }
+.leyenda li { display: flex; align-items: center; gap: 0.5rem; }
+.leyenda b { margin-left: auto; font-variant-numeric: tabular-nums; }
+.provincias { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.55rem; }
+.provincias button { width: 100%; font: inherit; color: inherit; background: none; border: 0; padding: 0; cursor: pointer; text-align: left; display: grid; gap: 0.2rem; }
+.provincias .fila { display: flex; justify-content: space-between; gap: 0.5rem; font-size: 0.9rem; }
+.provincias .fila b { font-variant-numeric: tabular-nums; }
+.provincias .pista { height: 0.5rem; background: var(--pista); border-radius: 2px; overflow: hidden; }
+.provincias .pista span { display: block; height: 100%; }
+
+/* Evolución */
+.grafico svg { width: 100%; height: auto; display: block; }
+.grafico text { fill: var(--gris); font: 11px var(--f-base); }
+.nota { color: var(--gris); font-size: 0.82rem; }
+
+/* Funciones */
+.funciones { display: grid; gap: 0.55rem; }
+.funcion { display: grid; grid-template-columns: minmax(0, 13rem) minmax(0, 1fr) 3.2rem; gap: 0.6rem; align-items: center; font-size: 0.88rem; }
+.funcion .n { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.funcion .pista { height: 1rem; background: var(--pista); border-radius: 2px; overflow: hidden; position: relative; }
+.funcion .pista span { display: block; height: 100%; }
+.funcion .pista em { position: absolute; left: 0.4rem; top: 50%; transform: translateY(-50%); font-style: normal; font-size: 0.7rem; color: var(--tinta); white-space: nowrap; }
+.funcion b { text-align: right; font-variant-numeric: tabular-nums; }
+
+/* Obras */
+.tabla { overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
+th { text-align: left; font: 700 0.75rem var(--f-cond); letter-spacing: 0.05em; text-transform: uppercase; color: var(--banda-texto); background: var(--banda); padding: 0.5rem 0.6rem; white-space: nowrap; }
+td { padding: 0.5rem 0.6rem; border-bottom: 1px solid var(--linea); vertical-align: top; }
+td.n { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+td.proy { min-width: 18rem; }
+.insignia { display: inline-block; font: 700 0.68rem var(--f-cond); letter-spacing: 0.05em; text-transform: uppercase; color: #fff; background: var(--rojo-inst); padding: 0.1rem 0.4rem; border-radius: 2px; margin-left: 0.3rem; }
+.vacio { color: var(--gris); padding: 0.75rem 0; }
+
+.pie { color: var(--gris); font-size: 0.82rem; display: grid; gap: 0.4rem; }
+.pie ul { margin: 0; padding-left: 1.1rem; display: grid; gap: 0.25rem; }
+
+@media (max-width: 860px) {
+  .dos { grid-template-columns: minmax(0, 1fr); }
+  .funcion { grid-template-columns: minmax(0, 1fr) 3.2rem; }
+  .funcion .pista { grid-column: 1 / -1; grid-row: 2; }
+  .donut { grid-template-columns: 8rem minmax(0, 1fr); }
+}
+@media (prefers-reduced-motion: reduce) { .barra-avance span { transition: none; } }
+</style>
+
+<header class="banda">
+  <div class="interior">
+    <div class="marca"><span class="sello" aria-hidden="true">ML</span>
+      <div><small>MuniLens · Gobiernos locales de Huancavelica</small><h1>Resultados de ejecución presupuestal</h1></div></div>
+    <span class="corte" id="corte"></span>
+  </div>
+</header>
+<nav class="filtros" aria-label="Filtros">
+  <div class="interior">
+    <label for="f-anio">Año fiscal<select id="f-anio"></select></label>
+    <label for="f-prov">Ámbito<select id="f-prov"></select></label>
+    <label for="f-muni">Municipalidad<select id="f-muni"></select></label>
+  </div>
+</nav>
+
+<main class="interior">
+  <section class="panel avance" aria-labelledby="t-avance">
+    <div class="avance-cab">
+      <div><div class="etq" id="t-avance">Presupuesto ejecutado</div><div class="pct" id="pct"></div></div>
+      <div class="de" id="de"></div>
+    </div>
+    <div class="barra-avance" role="img" id="barra"><span id="barra-fill"></span></div>
+    <div class="marcas"><span>0 %</span><span>60 %</span><span>75 %</span><span>90 %</span><span>100 %</span></div>
+  </section>
+
+  <section class="tarjetas" id="tarjetas" aria-label="Totales"></section>
+
+  <div class="dos">
+    <section class="panel" aria-labelledby="t-conteo">
+      <h2 id="t-conteo"><span id="t-conteo-txt">Resultados por municipalidad</span>
+        <span class="orden" role="group" aria-label="Orden"><button type="button" data-orden="asc" aria-pressed="true">Menos ejecutan</button><button type="button" data-orden="desc" aria-pressed="false">Más ejecutan</button></span></h2>
+      <ol class="conteo" id="conteo"></ol>
+    </section>
+    <div class="lado">
+      <section class="panel" aria-labelledby="t-semaforo">
+        <h2 id="t-semaforo">Semáforo</h2>
+        <div class="donut"><svg viewBox="0 0 120 120" id="donut" role="img"></svg><ul class="leyenda" id="leyenda"></ul></div>
+      </section>
+      <section class="panel" aria-labelledby="t-prov">
+        <h2 id="t-prov">Por provincia</h2>
+        <ul class="provincias" id="provincias"></ul>
+      </section>
+    </div>
+  </div>
+
+  <section class="panel grafico" aria-labelledby="t-evol">
+    <h2 id="t-evol"><span>Evolución de la ejecución</span><small id="evol-sub"></small></h2>
+    <svg viewBox="0 0 760 240" id="evol" role="img"></svg>
+    <p class="nota" id="evol-nota"></p>
+  </section>
+
+  <section class="panel" aria-labelledby="t-fun">
+    <h2 id="t-fun"><span>En qué se gastó</span><small>Barra = parte gastada de lo asignado a cada función</small></h2>
+    <div class="funciones" id="funciones"></div>
+  </section>
+
+  <section class="panel" aria-labelledby="t-obras">
+    <h2 id="t-obras"><span>Obras paradas</span><small id="obras-sub"></small></h2>
+    <div class="tabla"><table><thead><tr><th>Municipalidad</th><th>Código</th><th>Proyecto</th><th>Función</th><th>Asignado</th><th>Avance</th></tr></thead><tbody id="obras"></tbody></table></div>
+  </section>
+
+  <footer class="pie">
+    <strong>Fuente y método</strong>
+    <ul>
+      <li>MEF, consulta de gasto devengado mensual (datos abiertos), 2012–2026. Solo gastos presupuestarios de las municipalidades.</li>
+      <li>Ejecución = devengado ÷ presupuesto institucional modificado (PIM). Semáforo: verde ≥ 90 %, amarillo 75–90 %, naranja 60–75 %, rojo &lt; 60 %.</li>
+      <li>Lo no ejecutado con recursos ordinarios revierte al Tesoro; lo de canon, FONCOMUN y otras fuentes pasa al año siguiente como saldo de balance (comunicados MEF 013-2020-EF/52.06 y 030-2023-EF/50.01).</li>
+      <li>Obra parada: proyecto con S/ 200 000 o más asignados en el año y 10 % o menos de avance al cierre. «Varios años» = parada en dos o más años fiscales.</li>
+    </ul>
+  </footer>
+</main>
+
+<script>
+const D = /*__DATOS__*/null;
+const $ = s => document.querySelector(s);
+const esc = s => String(s).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]);
+const soles = n => "S/ " + Math.round(n).toLocaleString("es-PE").replace(/,/g, " ");
+const miles = s => s.replace(/\B(?=(\d{3})+(?!\d))/g, " ");
+const mill = n => { const a = Math.abs(n); if (a >= 1e6) { const [e, d] = (n / 1e6).toFixed(1).split("."); return "S/ " + miles(e) + "," + d + " M"; } return a >= 1e3 ? "S/ " + Math.round(n / 1e3) + " mil" : soles(n); };
+const pctTxt = p => p == null ? "—" : p.toFixed(1).replace(".", ",") + " %";
+const corto = n => n.replace("Municipalidad Provincial de ", "Provincial de ").replace("Municipalidad Distrital de ", "");
+const [U1, U2, U3] = D.umbrales.semaforo;
+const COLORES = { verde: "var(--verde)", amarillo: "var(--amarillo)", naranja: "var(--naranja)", rojo: "var(--rojo)" };
+const semaforo = p => p >= U1 ? "verde" : p >= U2 ? "amarillo" : p >= U3 ? "naranja" : "rojo";
+const MES = ["", "enero", "febrero", "marzo", "abril", "mayo", "junio", "julio", "agosto", "septiembre", "octubre", "noviembre", "diciembre"];
+const [ca, cm, cd] = D.corte.split("-");
+$("#corte").textContent = `Datos al ${+cd} de ${MES[+cm]} de ${ca} · ${D.anios[0]}–${D.en_curso}`;
+
+const est = { anio: D.cerrados[D.cerrados.length - 1], prov: "", muni: "", orden: "asc" };
+try { const h = location.hash.replace("#", ""); if (/^\d{6}$/.test(h) && D.munis.some(m => m.u === h)) { est.muni = h; est.prov = D.munis.find(m => m.u === h).p; } } catch (e) {}
+
+// Filtros
+$("#f-anio").innerHTML = [...D.anios].reverse().map(a => `<option value="${a}">${a}${a === D.en_curso ? " (en curso)" : ""}</option>`).join("");
+const provs = [...new Set(D.munis.map(m => m.p))].sort((a, b) => a.localeCompare(b, "es"));
+$("#f-prov").innerHTML = `<option value="">Todo el departamento</option>` + provs.map(p => `<option>${esc(p)}</option>`).join("");
+function opcionesMuni() {
+  const lista = D.munis.filter(m => !est.prov || m.p === est.prov).sort((a, b) => corto(a.n).localeCompare(corto(b.n), "es"));
+  $("#f-muni").innerHTML = `<option value="">Todas</option>` + lista.map(m => `<option value="${m.u}">${esc(corto(m.n))}</option>`).join("");
+  $("#f-muni").value = est.muni;
+}
+
+// Agregación
+function sumar(munis, anio) {
+  const t = { pim: 0, dev: 0, pinv: 0, dinv: 0, ro: 0, sep: 0, dic: 0, n: 0 };
+  munis.forEach(m => { const r = m.a[anio]; if (!r) return; const v = r.v; t.pim += v[0]; t.dev += v[1]; t.pinv += v[2]; t.dinv += v[3]; t.ro += v[4]; t.sep += v[5]; t.dic += v[6]; t.n++; });
+  return t;
+}
+const enCurso = () => +est.anio === D.en_curso;
+const ejec = t => t.pim > 0 ? 100 * (enCurso() ? t.sep : t.dev) / t.pim : null;
+const ambito = () => D.munis.filter(m => (!est.prov || m.p === est.prov) && (!est.muni || m.u === est.muni));
+const nombreAmbito = () => est.muni ? corto(D.munis.find(m => m.u === est.muni).n) : est.prov ? "Provincia de " + est.prov : "Departamento de Huancavelica";
+
+function pintar() {
+  const anio = +est.anio, mm = ambito(), t = sumar(mm, anio), p = ejec(t);
+  const color = p == null ? "var(--gris)" : COLORES[semaforo(p)];
+  $("#pct").textContent = pctTxt(p);
+  $("#pct").style.color = color;
+  $("#de").innerHTML = `${esc(nombreAmbito())} · ${anio}${enCurso() ? " · avance a septiembre" : ""}<br><b class="num">${mill(enCurso() ? t.sep : t.dev)}</b> gastados de <b class="num">${mill(t.pim)}</b>`;
+  $("#barra-fill").style.width = Math.min(100, p || 0) + "%";
+  $("#barra-fill").style.background = color;
+  $("#barra").setAttribute("aria-label", `Ejecutado ${pctTxt(p)}`);
+
+  const gastado = enCurso() ? t.sep : t.dev;
+  const pinv = t.pinv > 0 ? 100 * t.dinv / t.pinv : null;
+  $("#tarjetas").innerHTML = `
+    <div class="tarjeta"><span>Presupuesto (PIM)</span><b>${mill(t.pim)}</b><small>${t.n} municipalidad${t.n === 1 ? "" : "es"}</small></div>
+    <div class="tarjeta"><span>Gastado</span><b>${mill(gastado)}</b><small>devengado${enCurso() ? " a septiembre" : " en el año"}</small></div>
+    <div class="tarjeta alerta"><span>Sin gastar</span><b>${mill(t.pim - gastado)}</b><small>${enCurso() ? "aún por ejecutar en el año" : "al cierre del año"}</small></div>
+    <div class="tarjeta alerta"><span>Revierte al Tesoro</span><b>${enCurso() ? "—" : mill(t.ro)}</b><small>recursos ordinarios no ejecutados</small></div>
+    <div class="tarjeta"><span>Obras e inversión</span><b>${pctTxt(enCurso() ? null : pinv)}</b><small>${enCurso() ? "se mide al cierre" : "ejecución de la genérica 2.6"}</small></div>`;
+
+  // Conteo por municipalidad
+  const filas = mm.map(m => { const r = m.a[anio]; if (!r) return null; const v = r.v; const g = enCurso() ? v[5] : v[1]; return { m, pim: v[0], g, p: v[0] > 0 ? 100 * g / v[0] : 0 }; }).filter(Boolean)
+    .sort((a, b) => est.orden === "asc" ? a.p - b.p : b.p - a.p);
+  $("#t-conteo-txt").textContent = est.muni ? "Resultado de la municipalidad" : `Resultados por municipalidad (${filas.length})`;
+  $("#conteo").innerHTML = filas.length ? filas.map((f, i) => `<li><button type="button" data-u="${f.m.u}">
+      <span class="pos">${i + 1}</span>
+      <span class="nom"><span class="chip" style="background:${COLORES[semaforo(f.p)]}"></span><strong>${esc(corto(f.m.n))}</strong><em>${esc(f.m.p)}</em></span>
+      <span class="pct" style="color:${COLORES[semaforo(f.p)]}">${pctTxt(f.p)}</span>
+      <span class="pista"><span style="width:${Math.min(100, f.p)}%;background:${COLORES[semaforo(f.p)]}"></span></span>
+      <span class="det">${mill(f.g)} de ${mill(f.pim)} · sin gastar ${mill(f.pim - f.g)}</span></button></li>`).join("")
+    : `<li class="vacio">Sin presupuesto registrado en ${anio}.</li>`;
+
+  // Semáforo (donut)
+  const cuenta = { verde: 0, amarillo: 0, naranja: 0, rojo: 0 };
+  filas.forEach(f => cuenta[semaforo(f.p)]++);
+  const total = filas.length || 1;
+  let ang = -Math.PI / 2, arcos = "";
+  Object.entries(cuenta).forEach(([k, n]) => {
+    if (!n) return;
+    const a2 = ang + 2 * Math.PI * n / total, grande = a2 - ang > Math.PI ? 1 : 0;
+    const p1 = [60 + 48 * Math.cos(ang), 60 + 48 * Math.sin(ang)], p2 = [60 + 48 * Math.cos(a2), 60 + 48 * Math.sin(a2)];
+    arcos += n === total ? `<circle cx="60" cy="60" r="48" fill="none" stroke="${COLORES[k]}" stroke-width="20"/>`
+      : `<path d="M${p1[0]} ${p1[1]} A48 48 0 ${grande} 1 ${p2[0]} ${p2[1]}" fill="none" stroke="${COLORES[k]}" stroke-width="20"/>`;
+    ang = a2;
+  });
+  $("#donut").innerHTML = arcos + `<text x="60" y="58" text-anchor="middle" style="font:700 22px var(--f-base);fill:var(--tinta)">${filas.length}</text><text x="60" y="74" text-anchor="middle" style="font:10px var(--f-base);fill:var(--gris)">municipalidades</text>`;
+  $("#donut").setAttribute("aria-label", Object.entries(cuenta).map(([k, n]) => `${k}: ${n}`).join(", "));
+  const rot = { verde: `≥ ${U1} %`, amarillo: `${U2}–${U1} %`, naranja: `${U3}–${U2} %`, rojo: `< ${U3} %` };
+  $("#leyenda").innerHTML = Object.entries(cuenta).map(([k, n]) => `<li><span class="chip" style="background:${COLORES[k]}"></span>${k[0].toUpperCase() + k.slice(1)} <small style="color:var(--gris)">${rot[k]}</small><b>${n}</b></li>`).join("");
+
+  // Por provincia
+  $("#provincias").innerHTML = provs.map(pr => { const tt = sumar(D.munis.filter(m => m.p === pr), anio), pp = ejec(tt);
+    return `<li><button type="button" data-prov="${esc(pr)}" aria-pressed="${est.prov === pr}"><span class="fila"><span>${esc(pr)}${est.prov === pr ? " ●" : ""}</span><b>${pctTxt(pp)}</b></span>
+      <span class="pista"><span style="width:${Math.min(100, pp || 0)}%;background:${pp == null ? "var(--gris)" : COLORES[semaforo(pp)]}"></span></span></button></li>`; }).join("");
+
+  pintarEvolucion(mm);
+  pintarFunciones(mm, anio);
+  pintarObras(mm, anio);
+}
+
+function pintarEvolucion(mm) {
+  const anios = D.cerrados;
+  const serie = anios.map(a => { const t = sumar(mm, a); return t.pim > 0 ? 100 * t.dev / t.pim : null; });
+  const dep = anios.map(a => { const t = sumar(D.munis, a); return 100 * t.dev / t.pim; });
+  const W = 760, H = 240, L = 40, R = 16, T = 14, B = 30;
+  const x = i => L + (W - L - R) * i / (anios.length - 1), y = v => T + (H - T - B) * (1 - v / 100);
+  let g = "";
+  [0, 25, 50, 75, 100].forEach(v => { g += `<line x1="${L}" x2="${W - R}" y1="${y(v)}" y2="${y(v)}" stroke="var(--linea)"/><text x="${L - 6}" y="${y(v) + 4}" text-anchor="end">${v} %</text>`; });
+  [[U1, "var(--verde)"], [U2, "var(--amarillo)"], [U3, "var(--rojo)"]].forEach(([v, c]) => { g += `<line x1="${L}" x2="${W - R}" y1="${y(v)}" y2="${y(v)}" stroke="${c}" stroke-dasharray="3 4" opacity="0.7"/>`; });
+  anios.forEach((a, i) => { if (i % 2 === 0 || i === anios.length - 1) g += `<text x="${x(i)}" y="${H - 10}" text-anchor="middle">${a}</text>`; });
+  const linea = (vals, color, ancho, guion) => { const pts = vals.map((v, i) => v == null ? null : `${x(i)},${y(v)}`).filter(Boolean).join(" "); return pts ? `<polyline points="${pts}" fill="none" stroke="${color}" stroke-width="${ancho}" ${guion ? 'stroke-dasharray="6 5"' : ""} stroke-linejoin="round"/>` : ""; };
+  const propio = est.prov || est.muni;
+  if (propio) g += linea(dep, "var(--gris)", 1.5, true);
+  g += linea(serie, "var(--banda)", 3, false);
+  serie.forEach((v, i) => { if (v != null) g += `<circle cx="${x(i)}" cy="${y(v)}" r="4" fill="${COLORES[semaforo(v)]}" stroke="var(--hoja)" stroke-width="1.5"><title>${anios[i]}: ${pctTxt(v)}</title></circle>`; });
+  const ult = serie.length - 1; if (serie[ult] != null) g += `<text x="${x(ult) - 6}" y="${y(serie[ult]) - 10}" text-anchor="end" style="font:700 12px var(--f-base);fill:var(--tinta)">${pctTxt(serie[ult])}</text>`;
+  $("#evol").innerHTML = g;
+  $("#evol").setAttribute("aria-label", "Ejecución por año: " + anios.map((a, i) => `${a} ${pctTxt(serie[i])}`).join(", "));
+  $("#evol-sub").textContent = `${nombreAmbito()} · ${anios[0]}–${anios[ult]} (años cerrados)`;
+  const vals = serie.filter(v => v != null);
+  $("#evol-nota").textContent = vals.length ? `Promedio ${pctTxt(vals.reduce((s, v) => s + v, 0) / vals.length)}. ${propio ? "La línea punteada gris es el promedio del departamento. " : ""}Las líneas de colores marcan los umbrales del semáforo.` : "";
+}
+
+function pintarFunciones(mm, anio) {
+  const acc = {};
+  mm.forEach(m => (m.a[anio]?.f || []).forEach(([i, p, d]) => { acc[i] ||= [0, 0]; acc[i][0] += p; acc[i][1] += d; }));
+  const lista = Object.entries(acc).filter(([, v]) => v[0] > 0).sort((a, b) => b[1][0] - a[1][0]);
+  const maxP = Math.max(1, ...lista.map(([, v]) => v[0]));
+  $("#funciones").innerHTML = lista.length ? lista.map(([i, [p, d]]) => { const pc = 100 * d / p; const nom = D.funciones[i].toLowerCase(); return `
+    <div class="funcion"><span class="n" title="${esc(nom)}">${esc(nom.charAt(0).toUpperCase() + nom.slice(1))}</span>
+      <span class="pista" style="width:${Math.max(8, 100 * p / maxP)}%"><span style="width:${Math.min(100, pc)}%;background:${COLORES[semaforo(pc)]}"></span><em>${mill(d)} de ${mill(p)}</em></span>
+      <b>${Math.round(pc)} %</b></div>`; }).join("") : `<p class="vacio">Sin datos para ${anio}.</p>`;
+  if (enCurso()) $("#funciones").insertAdjacentHTML("beforeend", `<p class="nota">${anio}: devengado hasta septiembre.</p>`);
+}
+
+function pintarObras(mm, anio) {
+  const obras = [];
+  mm.forEach(m => m.o.forEach(o => { if (o[0] === anio) obras.push({ m, o }); }));
+  obras.sort((a, b) => b.o[4] - a.o[4]);
+  const cerrado = D.cerrados.includes(anio);
+  $("#obras-sub").textContent = cerrado ? `${anio} · ${obras.length} proyecto${obras.length === 1 ? "" : "s"} con ≥ S/ 200 mil y ≤ 10 % de avance` : `${anio} aún no cierra: elige un año cerrado`;
+  $("#obras").innerHTML = obras.length ? obras.map(({ m, o }) => `<tr><td>${esc(corto(m.n))}</td><td class="n">${esc(o[1])}</td>
+      <td class="proy">${esc(o[2])}${o[6] ? '<span class="insignia">Varios años</span>' : ""}</td><td>${esc(D.funciones[o[3]].toLowerCase())}</td>
+      <td class="n">${mill(o[4])}</td><td class="n">${pctTxt(o[5])}</td></tr>`).join("")
+    : `<tr><td colspan="6" class="vacio">${cerrado ? "No hay obras paradas con estos criterios." : "Las obras paradas se miden al cierre del año."}</td></tr>`;
+}
+
+// Eventos
+$("#f-anio").addEventListener("change", e => { est.anio = +e.target.value; pintar(); });
+$("#f-prov").addEventListener("change", e => { est.prov = e.target.value; est.muni = ""; opcionesMuni(); pintar(); });
+$("#f-muni").addEventListener("change", e => { est.muni = e.target.value; try { history.replaceState(null, "", est.muni ? "#" + est.muni : location.pathname); } catch (er) {} pintar(); });
+document.querySelectorAll(".orden button").forEach(b => b.addEventListener("click", () => {
+  est.orden = b.dataset.orden; document.querySelectorAll(".orden button").forEach(x => x.setAttribute("aria-pressed", x === b)); pintar();
+}));
+$("#conteo").addEventListener("click", e => { const b = e.target.closest("[data-u]"); if (!b) return; const m = D.munis.find(x => x.u === b.dataset.u);
+  est.prov = m.p; est.muni = m.u; $("#f-prov").value = m.p; opcionesMuni(); try { history.replaceState(null, "", "#" + m.u); } catch (er) {} pintar(); window.scrollTo({ top: 0, behavior: "smooth" }); });
+$("#provincias").addEventListener("click", e => { const b = e.target.closest("[data-prov]"); if (!b) return;
+  est.prov = est.prov === b.dataset.prov ? "" : b.dataset.prov; est.muni = ""; $("#f-prov").value = est.prov; opcionesMuni(); pintar(); });
+
+$("#f-anio").value = est.anio; $("#f-prov").value = est.prov; opcionesMuni();
+pintar();
+</script>

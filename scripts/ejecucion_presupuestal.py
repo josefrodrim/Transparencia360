@@ -84,9 +84,10 @@ def cargar(dep: str) -> tuple[dict, list[int], dict, dict]:
                     pr["dev"] += dev
                     pr["nombre"] = r["PRODUCTO_PROYECTO_NOMBRE"].strip()
                     pr["funcion"] = r["FUNCION_NOMBRE"].strip()
-                fn = funciones[(anio, r["FUNCION_NOMBRE"].strip())]
-                fn[0] += pim
-                fn[1] += dev
+                for clave in ((anio, r["FUNCION_NOMBRE"].strip()), (u, anio, r["FUNCION_NOMBRE"].strip())):
+                    fn = funciones[clave]
+                    fn[0] += pim
+                    fn[1] += dev
     return datos, anios, proyectos, funciones
 
 
@@ -117,6 +118,12 @@ def calcular(dep: str):
                 "ro_no_ejecutado": d["pim_ro"] - d["dev_ro"],
                 "avance_sep": 100 * d["dev_sep"] / d["pim"],
                 "dic": d["dev_dic"] / d["dev"] if d["dev"] > 0 else None,
+                # montos base para agregar por provincia o departamento
+                "pim_inv": d["pim_inv"],
+                "dev_inv": d["dev_inv"],
+                "dev_sep": d["dev_sep"],
+                "dev_dic": d["dev_dic"],
+                "funciones": {k[2]: v for k, v in funciones.items() if len(k) == 3 and k[0] == u and k[1] == a},
             }
         filas[u] = {"muni": m, "anios": por_anio}
 
@@ -276,7 +283,8 @@ def main(dep: str) -> None:
     print(f"\n## En qué se gastó en {ult} (departamento, por función)\n")
     print("| Función | Presupuesto (PIM) | Gastado | Ejecución | Sin gastar |")
     print("|---|---|---|---|---|")
-    for (a, fn), (p, d) in sorted(((k, v) for k, v in funciones.items() if k[0] == ult), key=lambda x: -x[1][0]):
+    dep_fn = ((k, v) for k, v in funciones.items() if len(k) == 2 and k[0] == ult)
+    for (a, fn), (p, d) in sorted(dep_fn, key=lambda x: -x[1][0]):
         if p > 0:
             print(
                 f"| {fn.capitalize()} | {soles_m(p)} | {soles_m(d)} | {100 * d / p:.0f} % {color(100 * d / p)} | "

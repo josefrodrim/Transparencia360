@@ -85,6 +85,9 @@ Hecho y en git:
   → semáforo (90/75/60 %), reincidentes, ritmo del año, gasto de diciembre > 30 %, ranking histórico, obras paradas
   (PIM ≥ S/ 200 mil y avance ≤ 10 %) con nombre de proyecto. Recursos ordinarios no ejecutados revierten al Tesoro;
   otras fuentes pasan como saldo de balance (no sumar años salvo RO).
+- Tablero estilo resultados ONPE: `scripts/tablero_ejecucion.py 09` (desde `scripts/`) → `web/ejecucion/index.html`;
+  artifact privado https://claude.ai/artifact/JxnVH14t3GCoBYSZBotz7z. La web de la ONPE tiene CAPTCHA: no se evade;
+  el estilo se ajusta con capturas que envíe el usuario.
 
 Siguiente:
 - MEF devengado 2024–2026 extraído para las 102 municipalidades; tabla en `docs/mef_gasto_personal_huancavelica.md`
