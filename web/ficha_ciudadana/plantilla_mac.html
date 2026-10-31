@@ -1,0 +1,489 @@
+<title>Planilla Abierta Escritorio</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<style>
+/* Layout: ventana de app de macOS. Barra de herramientas unificada arriba, barra lateral translúcida con
+   las 102 municipalidades por provincia, ficha en el panel de contenido, barra de estado abajo. */
+:root {
+  --escritorio: #c9cfd3;           /* fondo detrás de la ventana */
+  --escritorio-2: #aeb7bd;
+  --ventana: #ffffff;
+  --lateral: rgba(232, 234, 236, 0.78);
+  --barra: rgba(246, 246, 247, 0.86);
+  --tinta: #1d1d1f;
+  --secundario: #6e6e73;
+  --terciario: #a1a1a6;
+  --separador: rgba(0, 0, 0, 0.1);
+  --grupo: #f5f5f7;                /* fondo de grupos tipo Ajustes */
+  --acento: #b0263a;               /* acento del usuario: grana */
+  --acento-texto: #ffffff;
+  --acento-suave: rgba(176, 38, 58, 0.12);
+  --verde: #248a3d; --amarillo: #b25000; --rojo: #d70015;
+  --barra-a: #3a6f82; --barra-b: #c9973a;
+  --sombra: 0 0 0 0.5px rgba(0,0,0,0.18), 0 2px 6px rgba(0,0,0,0.08), 0 22px 60px rgba(0,0,0,0.22);
+  --f-sistema: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", "Segoe UI", Roboto, Arial, sans-serif;
+  --f-titulo: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Helvetica Neue", "Segoe UI", Roboto, Arial, sans-serif;
+  --f-mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --escritorio: #22272b; --escritorio-2: #161a1d; --ventana: #1e1e1f;
+    --lateral: rgba(44, 44, 46, 0.72); --barra: rgba(38, 38, 40, 0.88);
+    --tinta: #f5f5f7; --secundario: #a1a1a6; --terciario: #6e6e73; --separador: rgba(255,255,255,0.1);
+    --grupo: #2a2a2c; --acento: #e0566c; --acento-texto: #ffffff; --acento-suave: rgba(224, 86, 108, 0.18);
+    --verde: #32d74b; --amarillo: #ffb340; --rojo: #ff6961; --barra-a: #6aa8bd; --barra-b: #e0b660;
+    --sombra: 0 0 0 0.5px rgba(255,255,255,0.12), 0 2px 6px rgba(0,0,0,0.3), 0 22px 60px rgba(0,0,0,0.55);
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --escritorio: #22272b; --escritorio-2: #161a1d; --ventana: #1e1e1f;
+  --lateral: rgba(44, 44, 46, 0.72); --barra: rgba(38, 38, 40, 0.88);
+  --tinta: #f5f5f7; --secundario: #a1a1a6; --terciario: #6e6e73; --separador: rgba(255,255,255,0.1);
+  --grupo: #2a2a2c; --acento: #e0566c; --acento-texto: #ffffff; --acento-suave: rgba(224, 86, 108, 0.18);
+  --verde: #32d74b; --amarillo: #ffb340; --rojo: #ff6961; --barra-a: #6aa8bd; --barra-b: #e0b660;
+  --sombra: 0 0 0 0.5px rgba(255,255,255,0.12), 0 2px 6px rgba(0,0,0,0.3), 0 22px 60px rgba(0,0,0,0.55);
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+html, body { height: 100%; }
+body {
+  margin: 0; font-family: var(--f-sistema); font-size: 13px; color: var(--tinta);
+  background: radial-gradient(120% 90% at 20% 0%, var(--escritorio), var(--escritorio-2));
+  -webkit-font-smoothing: antialiased;
+}
+.escritorio {
+  height: 100%; display: grid; place-items: center;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 24px;
+}
+.ventana {
+  width: min(1120px, 100%); height: min(760px, 100%); background: var(--ventana);
+  border-radius: 10px; box-shadow: var(--sombra); overflow: hidden;
+  display: grid; grid-template-columns: 250px minmax(0, 1fr); grid-template-rows: 52px minmax(0, 1fr) 26px;
+  grid-template-areas: "lateral barra" "lateral contenido" "lateral estado";
+}
+.num, .dato { font-variant-numeric: tabular-nums; }
+button { font: inherit; color: inherit; }
+:focus-visible { outline: 3px solid var(--acento-suave); outline-offset: 1px; box-shadow: 0 0 0 1px var(--acento); border-radius: 6px; }
+
+/* Barra lateral */
+.lateral {
+  grid-area: lateral; background: var(--lateral);
+  -webkit-backdrop-filter: saturate(180%) blur(30px); backdrop-filter: saturate(180%) blur(30px);
+  border-right: 0.5px solid var(--separador); display: grid; grid-template-rows: 52px auto minmax(0, 1fr); min-height: 0;
+}
+.semaforos { display: flex; gap: 8px; align-items: center; padding: 0 14px; }
+.semaforos span { width: 12px; height: 12px; border-radius: 50%; box-shadow: inset 0 0 0 0.5px rgba(0,0,0,0.15); }
+.semaforos span:nth-child(1) { background: #ff5f57; } .semaforos span:nth-child(2) { background: #febc2e; } .semaforos span:nth-child(3) { background: #28c840; }
+.filtros { display: flex; gap: 2px; margin: 0 10px 8px; padding: 2px; background: var(--separador); border-radius: 7px; }
+.filtros button { flex: 1; border: 0; background: none; padding: 3px 4px; border-radius: 5px; font-size: 11.5px; cursor: default; color: var(--tinta); }
+.filtros button[aria-pressed="true"] { background: var(--ventana); box-shadow: 0 0.5px 2px rgba(0,0,0,0.2); }
+.lista { overflow-y: auto; padding: 0 10px 12px; min-height: 0; }
+.provincia > button {
+  width: 100%; display: flex; align-items: center; gap: 4px; border: 0; background: none; cursor: default;
+  font-size: 11px; font-weight: 600; color: var(--secundario); padding: 10px 6px 4px; text-align: left;
+}
+.provincia > button .triangulo { display: inline-block; transition: transform 0.15s ease; font-size: 9px; width: 10px; }
+.provincia[data-abierta="false"] .triangulo { transform: rotate(-90deg); }
+.provincia[data-abierta="false"] ul { display: none; }
+.provincia ul { list-style: none; margin: 0; padding: 0; }
+.item {
+  width: 100%; display: flex; align-items: center; gap: 7px; border: 0; background: none; cursor: default;
+  padding: 4px 8px; border-radius: 6px; text-align: left; font-size: 13px; line-height: 1.35;
+}
+.item .nombre { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.item .punto { width: 7px; height: 7px; border-radius: 50%; flex: none; }
+.item .insignia { font-size: 11px; color: var(--secundario); background: var(--separador); border-radius: 8px; padding: 0 6px; }
+.item[aria-current="true"] { background: var(--acento); color: var(--acento-texto); }
+.item[aria-current="true"] .insignia { color: var(--acento-texto); background: rgba(255,255,255,0.25); }
+.item:hover:not([aria-current="true"]) { background: var(--separador); }
+.vacio { color: var(--secundario); padding: 16px 8px; font-size: 12px; }
+
+/* Barra de herramientas */
+.barra {
+  grid-area: barra; background: var(--barra); border-bottom: 0.5px solid var(--separador);
+  -webkit-backdrop-filter: blur(20px); backdrop-filter: blur(20px);
+  display: flex; align-items: center; gap: 10px; padding: 0 12px 0 16px; min-width: 0;
+}
+.barra .titulo { min-width: 0; display: grid; line-height: 1.2; }
+.barra .titulo strong { font-family: var(--f-titulo); font-size: 13px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.barra .titulo span { font-size: 11px; color: var(--secundario); white-space: nowrap; }
+.espacio { flex: 1; }
+.segmentado { display: flex; padding: 2px; background: var(--separador); border-radius: 7px; }
+.segmentado button { border: 0; background: none; padding: 3px 12px; border-radius: 5px; font-size: 12px; cursor: default; }
+.segmentado button[aria-pressed="true"] { background: var(--ventana); box-shadow: 0 0.5px 2px rgba(0,0,0,0.2); }
+.busqueda { position: relative; width: min(220px, 34vw); }
+.busqueda input {
+  width: 100%; font: inherit; font-size: 13px; color: var(--tinta); background: var(--separador);
+  border: 0; border-radius: 6px; padding: 5px 30px 5px 26px; outline: none;
+}
+.busqueda input:focus { box-shadow: 0 0 0 3px var(--acento-suave), 0 0 0 1px var(--acento); background: var(--ventana); }
+.busqueda .lupa { position: absolute; left: 8px; top: 50%; transform: translateY(-50%); color: var(--secundario); width: 12px; height: 12px; }
+.busqueda kbd { position: absolute; right: 6px; top: 50%; transform: translateY(-50%); font: 11px var(--f-sistema); color: var(--terciario); border: 0.5px solid var(--separador); border-radius: 4px; padding: 0 4px; }
+.boton-lateral { display: none; border: 0; background: none; padding: 4px 6px; border-radius: 6px; cursor: default; color: var(--secundario); }
+.boton-lateral:hover { background: var(--separador); }
+
+/* Contenido */
+.contenido { grid-area: contenido; overflow-y: auto; min-height: 0; }
+.ficha { max-width: 640px; margin: 0 auto; padding: 24px 24px 40px; display: grid; gap: 18px; }
+@media (prefers-reduced-motion: no-preference) {
+  .ficha.entra { animation: entra 0.22s ease-out; }
+  @keyframes entra { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+}
+.cabeza { display: flex; gap: 14px; align-items: center; }
+.icono-muni {
+  width: 52px; height: 52px; border-radius: 12px; flex: none; display: grid; place-items: center;
+  background: linear-gradient(180deg, var(--acento), color-mix(in srgb, var(--acento) 70%, #000));
+  color: #fff; font: 600 20px var(--f-titulo); box-shadow: 0 1px 3px rgba(0,0,0,0.25);
+}
+.cabeza > div { min-width: 0; display: grid; gap: 2px; }
+.cabeza h1 { margin: 0; font: 700 22px/1.2 var(--f-titulo); letter-spacing: -0.01em; text-wrap: balance; }
+.cabeza p { margin: 0; color: var(--secundario); font-size: 12.5px; }
+.estado-pill { margin-left: auto; flex: none; font-size: 11.5px; font-weight: 600; padding: 3px 9px; border-radius: 10px; white-space: nowrap; }
+.estado-pill.bien { color: var(--verde); background: color-mix(in srgb, var(--verde) 14%, transparent); }
+.estado-pill.medias { color: var(--amarillo); background: color-mix(in srgb, var(--amarillo) 14%, transparent); }
+.estado-pill.mal { color: var(--rojo); background: color-mix(in srgb, var(--rojo) 12%, transparent); }
+
+.grupo-titulo { font-size: 11px; font-weight: 600; color: var(--secundario); margin: 0 0 6px 12px; text-transform: uppercase; letter-spacing: 0.04em; }
+.grupo { background: var(--grupo); border-radius: 8px; overflow: hidden; }
+.fila { display: flex; align-items: center; gap: 10px; padding: 9px 12px; min-height: 36px; }
+.fila + .fila { box-shadow: inset 0 0.5px 0 var(--separador); }
+.fila .glifo { width: 22px; height: 22px; border-radius: 5px; flex: none; display: grid; place-items: center; color: #fff; font-size: 12px; font-weight: 700; }
+.fila .etq { flex: 1; min-width: 0; }
+.fila .etq small { display: block; color: var(--secundario); font-size: 11.5px; margin-top: 1px; }
+.fila .val { text-align: right; font-variant-numeric: tabular-nums; font-weight: 500; white-space: nowrap; }
+.fila .val.grande { font: 600 20px var(--f-titulo); font-variant-numeric: tabular-nums; }
+.pie-grupo { color: var(--secundario); font-size: 11.5px; margin: 6px 12px 0; line-height: 1.45; }
+.barra-comp { display: flex; height: 8px; border-radius: 4px; overflow: hidden; background: var(--separador); flex: 1; }
+.barra-comp span { display: block; height: 100%; }
+.medidor { flex: 1; height: 6px; border-radius: 3px; background: var(--separador); overflow: hidden; }
+.medidor span { display: block; height: 100%; background: var(--acento); border-radius: 3px; }
+.alerta .glifo { background: var(--amarillo); }
+.alerta .etq strong { font-weight: 600; }
+.enlace { color: var(--acento); text-decoration: none; }
+.enlace:hover { text-decoration: underline; }
+
+/* Vista comparar */
+.tabla-envoltura { padding: 0; overflow: auto; height: 100%; }
+table { border-collapse: collapse; width: 100%; font-size: 12.5px; }
+th { position: sticky; top: 0; background: var(--barra); -webkit-backdrop-filter: blur(20px); backdrop-filter: blur(20px); text-align: left; font-weight: 500; color: var(--secundario); border-bottom: 0.5px solid var(--separador); padding: 0; z-index: 1; }
+th button { width: 100%; text-align: inherit; border: 0; background: none; padding: 6px 12px; cursor: default; font-size: 12px; color: inherit; }
+th[aria-sort] button { color: var(--tinta); font-weight: 600; }
+td { padding: 5px 12px; white-space: nowrap; }
+td.num, th.num { text-align: right; }
+tbody tr:nth-child(even) { background: color-mix(in srgb, var(--separador) 45%, transparent); }
+tbody tr { cursor: default; }
+tbody tr[aria-current="true"] { background: var(--acento); color: var(--acento-texto); }
+
+/* Barra de estado */
+.estado { grid-area: estado; border-top: 0.5px solid var(--separador); display: flex; align-items: center; gap: 14px; padding: 0 14px; font-size: 11px; color: var(--secundario); white-space: nowrap; overflow: hidden; }
+.estado kbd { font: 10.5px var(--f-sistema); border: 0.5px solid var(--separador); border-radius: 3px; padding: 0 3px; }
+.aviso { position: fixed; left: 50%; bottom: calc(40px + env(safe-area-inset-bottom, 0px)); transform: translateX(-50%); background: var(--barra); -webkit-backdrop-filter: blur(20px); backdrop-filter: blur(20px); box-shadow: var(--sombra); border-radius: 8px; padding: 8px 14px; font-size: 12.5px; }
+
+/* Teléfono: la ventana ocupa la pantalla y la barra lateral se desliza */
+@media (max-width: 760px) {
+  .escritorio { padding-block: 0; padding-left: 0; padding-right: 0; }
+  .ventana { width: 100%; height: 100%; border-radius: 0; grid-template-columns: minmax(0, 1fr); grid-template-areas: "barra" "contenido" "estado"; }
+  .barra { padding-left: max(10px, env(safe-area-inset-left, 0px)); padding-right: max(10px, env(safe-area-inset-right, 0px)); gap: 8px; }
+  .barra .titulo span, .busqueda kbd, .estado .atajos { display: none; }
+  .busqueda { width: 40vw; }
+  .boton-lateral { display: block; }
+  .lateral {
+    position: fixed; inset: 0 auto 0 0; width: min(300px, 86vw); z-index: 10; transform: translateX(-102%);
+    transition: transform 0.2s ease; box-shadow: var(--sombra); background: var(--ventana);
+    padding-top: env(safe-area-inset-top, 0px); padding-left: env(safe-area-inset-left, 0px);
+  }
+  .lateral.abierta { transform: none; }
+  .ficha { padding: 18px max(16px, env(safe-area-inset-right, 0px)) 32px max(16px, env(safe-area-inset-left, 0px)); }
+}
+</style>
+
+<div class="escritorio">
+  <div class="ventana" role="application" aria-label="Planilla Abierta">
+    <nav class="lateral" id="lateral" aria-label="Municipalidades">
+      <div class="semaforos" aria-hidden="true"><span></span><span></span><span></span></div>
+      <div class="filtros" role="group" aria-label="Filtrar">
+        <button type="button" data-filtro="todas" aria-pressed="true">Todas</button>
+        <button type="button" data-filtro="alertas" aria-pressed="false">Con alertas</button>
+        <button type="button" data-filtro="nopub" aria-pressed="false">No publican</button>
+      </div>
+      <div class="lista" id="lista"></div>
+    </nav>
+
+    <header class="barra">
+      <button type="button" class="boton-lateral" id="abrir-lateral" aria-label="Mostrar municipalidades" aria-controls="lateral">
+        <svg width="18" height="14" viewBox="0 0 18 14" fill="none" stroke="currentColor" stroke-width="1.4"><rect x="0.7" y="0.7" width="16.6" height="12.6" rx="2.5"/><line x1="6" y1="1" x2="6" y2="13"/></svg>
+      </button>
+      <div class="titulo"><strong>Planilla Abierta</strong><span>Huancavelica · personal municipal</span></div>
+      <div class="espacio"></div>
+      <div class="segmentado" role="group" aria-label="Vista">
+        <button type="button" data-vista="ficha" aria-pressed="true">Ficha</button>
+        <button type="button" data-vista="comparar" aria-pressed="false">Comparar</button>
+      </div>
+      <label class="busqueda">
+        <svg class="lupa" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.4"><circle cx="5" cy="5" r="4"/><line x1="8" y1="8" x2="11.3" y2="11.3"/></svg>
+        <input id="q" type="search" placeholder="Buscar" aria-label="Buscar municipalidad" autocomplete="off">
+        <kbd>/</kbd>
+      </label>
+    </header>
+
+    <main class="contenido" id="contenido" tabindex="-1"></main>
+
+    <footer class="estado">
+      <span id="resumen-estado"></span>
+      <span class="atajos"><kbd>↑</kbd><kbd>↓</kbd> moverse · <kbd>/</kbd> buscar · <kbd>⌘</kbd><kbd>C</kbd> copiar ficha · arrastra una municipalidad para llevar su resumen</span>
+    </footer>
+  </div>
+</div>
+<div class="aviso" id="aviso" role="status" hidden></div>
+
+<script>
+const DATOS = /*__DATOS__*/null;
+const M = DATOS.municipalidades;
+const porUbigeo = Object.fromEntries(M.map(m => [m.ubigeo, m]));
+const $ = s => document.querySelector(s);
+const soles = n => n == null ? "—" : "S/ " + Math.round(n).toLocaleString("es-PE").replace(/,/g, " ");
+const millones = n => n >= 1e6 ? "S/ " + (n / 1e6).toLocaleString("es-PE", { maximumFractionDigits: 1 }) + " M" : soles(n);
+const sinTildes = s => s.normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase();
+const corto = m => m.nombre.replace("Municipalidad Provincial de ", "Provincial de ").replace("Municipalidad Distrital de ", "");
+const esc = s => String(s).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]);
+const MESES = ["enero", "febrero", "marzo", "abril", "mayo", "junio", "julio", "agosto", "septiembre", "octubre", "noviembre", "diciembre"];
+const mesTexto = p => { if (!p) return "—"; const [a, m] = p.split("-"); return MESES[+m - 1] + " " + a; };
+const animar = !matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+function nivel(m) {
+  const t = m.transparencia;
+  if (t.meses === 0) return { clase: "mal", texto: "No publica sueldos", color: "var(--rojo)" };
+  if (t.puntaje >= 66) return { clase: "bien", texto: "Publica sueldos", color: "var(--verde)" };
+  if (t.puntaje >= 20) return { clase: "medias", texto: "Publica a medias", color: "var(--amarillo)" };
+  return { clase: "mal", texto: "Publica muy poco", color: "var(--rojo)" };
+}
+function resumenTexto(m) {
+  const n = nivel(m);
+  return `${m.nombre} (${m.provincia}, Huancavelica)\nAlcalde: ${soles(m.alcalde.mensual)} al mes (bruto)\n` +
+    `Planilla 2025: ${soles(m.gasto_2025.personal)} · Locación: ${soles(m.gasto_2025.locacion_pn)}\n` +
+    `Transparencia: ${m.transparencia.puntaje}/100 (${n.texto}) · Alertas: ${m.alertas.length}\nFuente: MEF, INEI, Portal de Transparencia — Planilla Abierta`;
+}
+
+let estado = { u: "090301", vista: "ficha", filtro: "todas", q: "", abiertas: new Set(["Angaraes"]), orden: { campo: "puntaje", desc: true } };
+try { const g = JSON.parse(localStorage.getItem("pa-mac") || "{}"); if (g.abiertas) estado.abiertas = new Set(g.abiertas); } catch (e) {}
+const guardar = () => { try { localStorage.setItem("pa-mac", JSON.stringify({ abiertas: [...estado.abiertas] })); } catch (e) {} };
+
+function visibles() {
+  const q = sinTildes(estado.q.trim());
+  return M.filter(m =>
+    (estado.filtro !== "alertas" || m.alertas.length) &&
+    (estado.filtro !== "nopub" || m.transparencia.meses === 0) &&
+    (!q || sinTildes(m.nombre).includes(q) || sinTildes(m.provincia).includes(q) || m.ubigeo.startsWith(q)));
+}
+
+function pintarLista() {
+  const vis = visibles();
+  const prov = {};
+  vis.forEach(m => (prov[m.provincia] ||= []).push(m));
+  const nombres = Object.keys(prov).sort((a, b) => a.localeCompare(b, "es"));
+  const buscando = estado.q.trim() !== "";
+  $("#lista").innerHTML = nombres.length ? nombres.map(p => {
+    const items = prov[p].sort((a, b) => (a.tipo === "provincial" ? -1 : 0) - (b.tipo === "provincial" ? -1 : 0) || corto(a).localeCompare(corto(b), "es"));
+    const abierta = buscando || estado.abiertas.has(p) || items.some(m => m.ubigeo === estado.u);
+    return `<section class="provincia" data-abierta="${abierta}">
+      <button type="button" data-prov="${esc(p)}" aria-expanded="${abierta}"><span class="triangulo">▼</span>${esc(p)}</button>
+      <ul>${items.map(m => `<li><button type="button" class="item" draggable="true" data-u="${m.ubigeo}" aria-current="${m.ubigeo === estado.u}">
+        <span class="punto" style="background:${nivel(m).color}"></span><span class="nombre">${esc(corto(m))}</span>
+        ${m.alertas.length ? `<span class="insignia" title="Alertas">${m.alertas.length}</span>` : ""}</button></li>`).join("")}</ul>
+    </section>`;
+  }).join("") : `<p class="vacio">Ninguna municipalidad coincide. Prueba con otro nombre o quita el filtro.</p>`;
+}
+
+function fila(color, glifo, etq, val, sub = "", claseVal = "") {
+  return `<div class="fila"><span class="glifo" style="background:${color}">${glifo}</span>
+    <span class="etq">${etq}${sub ? `<small>${sub}</small>` : ""}</span><span class="val ${claseVal}">${val}</span></div>`;
+}
+
+function ficha(m) {
+  const ref = DATOS.referencias[m.tipo] || {}, g = m.gasto_2025, t = m.transparencia, r = m.renamu, n = nivel(m);
+  const planilla = g.personal || 0, loc = g.locacion_pn || 0, base = planilla + loc || 1;
+  const iniciales = corto(m).replace("Provincial de ", "").split(/[\s-]+/).filter(w => w.length > 2).slice(0, 2).map(w => w[0]).join("").toUpperCase();
+  const comp = ref.alcalde ? (m.alcalde.mensual > ref.alcalde * 1.05 ? "más que" : m.alcalde.mensual < ref.alcalde * 0.95 ? "menos que" : "igual que") : "";
+  const notaAlc = m.alcalde.fuente === "Servir" ? " Registrado en la partida Ley Servir: aproximado." : m.alcalde.fuente === "PTE" ? " Publicado por la municipalidad." : "";
+  return `<div class="ficha${animar ? " entra" : ""}">
+    <div class="cabeza">
+      <div class="icono-muni" aria-hidden="true">${esc(iniciales)}</div>
+      <div><h1>${esc(m.nombre)}</h1><p>Provincia de ${esc(m.provincia)} · ${m.tipo === "provincial" ? "Provincial" : "Distrital"} · Ubigeo <span class="dato">${m.ubigeo}</span></p></div>
+      <span class="estado-pill ${n.clase}">${n.texto}</span>
+    </div>
+
+    <div><h2 class="grupo-titulo">Autoridades</h2>
+      <div class="grupo">
+        ${fila("var(--acento)", "A", "Alcalde", soles(m.alcalde.mensual), "al mes, bruto", "grande")}
+        ${fila("var(--barra-a)", "Σ", "Pagado al alcalde en 2025", soles(m.alcalde.anual_2025))}
+        ${fila("var(--barra-b)", "R", "Dietas de regidores en 2025", soles(g.dietas), "por asistir a sesiones; tope 30 % del sueldo del alcalde")}
+      </div>
+      <p class="pie-grupo">${comp ? `Gana ${comp} el alcalde ${m.tipo} típico de Huancavelica (${soles(ref.alcalde)}). ` : ""}El monto lo fija el Estado (D.S. 413-2019-EF), no el concejo.${notaAlc}</p>
+    </div>
+
+    <div><h2 class="grupo-titulo">Gasto en personal 2025</h2>
+      <div class="grupo">
+        ${fila("var(--barra-a)", "P", "Planilla", soles(planilla), "sueldos, CAS, aportes, alcalde y dietas")}
+        ${fila("#8e8e93", "C", "De eso, trabajadores CAS", soles(g.cas))}
+        ${fila("var(--barra-b)", "L", "Locación de servicios a personas", soles(loc), "aparte de la planilla; no figuran como personal")}
+        <div class="fila"><span class="barra-comp" role="img" aria-label="Planilla ${Math.round(100 * planilla / base)} %, locación ${Math.round(100 * loc / base)} %">
+          <span style="width:${100 * planilla / base}%;background:var(--barra-a)"></span><span style="width:${100 * loc / base}%;background:var(--barra-b)"></span></span>
+          <span class="val">${Math.round(100 * loc / base)} % locación</span></div>
+        ${m.variacion_2026 != null ? fila(m.variacion_2026 > 25 ? "var(--amarillo)" : "#8e8e93", "Δ", "Planilla ene–sep 2026 frente a 2025", `${m.variacion_2026 > 0 ? "+" : ""}${m.variacion_2026} %`) : ""}
+      </div>
+      ${ref.personal ? `<p class="pie-grupo">Una municipalidad ${m.tipo} típica de Huancavelica gastó ${soles(ref.personal)} en planilla.</p>` : ""}
+    </div>
+
+    <div><h2 class="grupo-titulo">Personas que trabajan ahí</h2>
+      <div class="grupo">
+        ${r.tiene_personal === "no"
+          ? fila("var(--rojo)", "!", "Declaró al INEI que no tiene personal", "0", "a pesar de lo que registra el MEF")
+          : fila("var(--barra-a)", "#", "En planilla", r.total ?? "—", "al 31 de diciembre de 2025") + fila("#8e8e93", "C", "De ellos, CAS", r.cas ?? "—")}
+        ${fila("var(--barra-b)", "L", "Por locación de servicios", r.locacion ?? "—")}
+      </div>
+      <p class="pie-grupo">Declarado por la propia municipalidad al INEI (RENAMU 2026).</p>
+    </div>
+
+    <div><h2 class="grupo-titulo">¿Publica los sueldos?</h2>
+      <div class="grupo">
+        <div class="fila"><span class="glifo" style="background:${n.color}">✓</span><span class="etq">Transparencia</span>
+          <span class="medidor" role="img" aria-label="${t.puntaje} de 100"><span style="width:${t.puntaje}%"></span></span>
+          <span class="val">${t.puntaje}/100</span></div>
+        ${fila("#8e8e93", "M", "Meses publicados", `${t.meses} de ${t.meses_posibles}`, t.meses ? `último: ${mesTexto(t.ultimo)}` : "enero 2024 – octubre 2026")}
+        ${t.cobertura != null ? fila("#8e8e93", "%", "Completitud frente al MEF", `${t.cobertura} %`, "una lista completa ronda el 80 %") : ""}
+        ${m.pte ? fila("var(--barra-a)", "S", `Sueldo del medio (${mesTexto(m.pte.periodo)})`, soles(m.pte.mediana), `${m.pte.personas} personas · de ${soles(m.pte.minimo)} a ${soles(m.pte.maximo)}`) : ""}
+        ${t.id_pte ? `<div class="fila"><span class="etq"><a class="enlace" href="https://www.transparencia.gob.pe/enlaces/pte_transparencia_enlaces.aspx?id_entidad=${encodeURIComponent(t.id_pte)}" target="_blank" rel="noopener">Abrir en el Portal de Transparencia ↗</a></span></div>` : ""}
+      </div>
+      ${t.posicion ? `<p class="pie-grupo">Puesto ${t.posicion} de las ${DATOS.publican} municipalidades que publican algo.</p>` : ""}
+    </div>
+
+    <div><h2 class="grupo-titulo">Alertas</h2>
+      <div class="grupo">
+        ${m.alertas.length ? m.alertas.map(a => `<div class="fila alerta"><span class="glifo">!</span>
+          <span class="etq"><strong>${esc(a.titulo)}</strong><small class="dato">${esc(a.detalle)}</small><small>Puede deberse a: ${esc(a.posible)}</small></span></div>`).join("")
+          : fila("var(--verde)", "✓", "Sin alertas con los datos disponibles", "")}
+      </div>
+      <p class="pie-grupo">Una alerta es un indicio para revisar, no una prueba de irregularidad.</p>
+    </div>
+  </div>`;
+}
+
+const columnas = [
+  ["nombre", "Municipalidad", m => corto(m)], ["provincia", "Provincia", m => m.provincia],
+  ["alcalde", "Alcalde/mes", m => m.alcalde.mensual, true], ["personal", "Planilla 2025", m => m.gasto_2025.personal, true],
+  ["locacion", "Locación 2025", m => m.gasto_2025.locacion_pn, true], ["puntaje", "Transparencia", m => m.transparencia.puntaje, true],
+  ["alertas", "Alertas", m => m.alertas.length, true],
+];
+function tabla() {
+  const col = columnas.find(c => c[0] === estado.orden.campo);
+  const filas = visibles().sort((a, b) => {
+    const x = col[2](a), y = col[2](b);
+    const c = typeof x === "string" ? x.localeCompare(y, "es") : (x ?? -1) - (y ?? -1);
+    return estado.orden.desc ? -c : c;
+  });
+  return `<div class="tabla-envoltura"><table><thead><tr>${columnas.map(([k, t, , num]) =>
+      `<th class="${num ? "num" : ""}" ${k === estado.orden.campo ? `aria-sort="${estado.orden.desc ? "descending" : "ascending"}"` : ""}><button type="button" data-orden="${k}">${t}${k === estado.orden.campo ? (estado.orden.desc ? " ▾" : " ▴") : ""}</button></th>`).join("")}</tr></thead>
+    <tbody>${filas.map(m => `<tr data-u="${m.ubigeo}" draggable="true" aria-current="${m.ubigeo === estado.u}">
+      <td><span class="punto" style="display:inline-block;width:7px;height:7px;border-radius:50%;margin-right:6px;background:${nivel(m).color}"></span>${esc(corto(m))}</td>
+      <td>${esc(m.provincia)}</td><td class="num">${soles(m.alcalde.mensual)}</td><td class="num">${soles(m.gasto_2025.personal)}</td>
+      <td class="num">${soles(m.gasto_2025.locacion_pn)}</td><td class="num">${m.transparencia.puntaje}</td><td class="num">${m.alertas.length || "—"}</td></tr>`).join("")}</tbody></table></div>`;
+}
+
+function pintarContenido() {
+  $("#contenido").innerHTML = estado.vista === "ficha" ? ficha(porUbigeo[estado.u]) : tabla();
+  document.querySelectorAll(".segmentado button").forEach(b => b.setAttribute("aria-pressed", b.dataset.vista === estado.vista));
+  const m = porUbigeo[estado.u];
+  $("#resumen-estado").textContent = estado.vista === "ficha" ? `${corto(m)} · ${m.provincia}` : `${visibles().length} municipalidades`;
+}
+
+function seleccionar(u) {
+  if (!porUbigeo[u]) return;
+  estado.u = u;
+  pintarLista(); pintarContenido();
+  $("#contenido").scrollTop = 0;
+  $("#lateral").classList.remove("abierta");
+  try { history.replaceState(null, "", "#" + u); } catch (e) {}
+}
+
+let temporizador;
+function avisar(texto) {
+  const a = $("#aviso"); a.textContent = texto; a.hidden = false;
+  clearTimeout(temporizador); temporizador = setTimeout(() => { a.hidden = true; }, 1800);
+}
+
+// Barra lateral
+$("#lista").addEventListener("click", e => {
+  const p = e.target.closest("[data-prov]");
+  if (p) {
+    const nombre = p.dataset.prov;
+    estado.abiertas.has(nombre) ? estado.abiertas.delete(nombre) : estado.abiertas.add(nombre);
+    guardar(); pintarLista(); return;
+  }
+  const it = e.target.closest("[data-u]"); if (it) seleccionar(it.dataset.u);
+});
+document.querySelectorAll(".filtros button").forEach(b => b.addEventListener("click", () => {
+  estado.filtro = b.dataset.filtro;
+  document.querySelectorAll(".filtros button").forEach(x => x.setAttribute("aria-pressed", x === b));
+  pintarLista(); if (estado.vista === "comparar") pintarContenido();
+}));
+$("#abrir-lateral").addEventListener("click", () => $("#lateral").classList.toggle("abierta"));
+document.querySelectorAll(".segmentado button").forEach(b => b.addEventListener("click", () => { estado.vista = b.dataset.vista; pintarContenido(); }));
+
+// Búsqueda
+$("#q").addEventListener("input", e => {
+  estado.q = e.target.value; pintarLista();
+  if (estado.vista === "comparar") pintarContenido();
+  if (matchMedia("(max-width: 760px)").matches && estado.q) $("#lateral").classList.add("abierta");
+});
+$("#q").addEventListener("keydown", e => {
+  if (e.key === "Enter") { const p = visibles()[0]; if (p) { seleccionar(p.ubigeo); e.target.blur(); } }
+  if (e.key === "Escape") { e.target.value = ""; estado.q = ""; pintarLista(); e.target.blur(); }
+});
+
+// Tabla
+$("#contenido").addEventListener("click", e => {
+  const o = e.target.closest("[data-orden]");
+  if (o) {
+    const c = o.dataset.orden;
+    estado.orden = { campo: c, desc: estado.orden.campo === c ? !estado.orden.desc : !["nombre", "provincia"].includes(c) };
+    pintarContenido(); return;
+  }
+  const tr = e.target.closest("tr[data-u]");
+  if (tr) { estado.vista = "ficha"; seleccionar(tr.dataset.u); }
+});
+
+// Arrastrar una municipalidad lleva su resumen como texto
+document.addEventListener("dragstart", e => {
+  const el = e.target.closest("[data-u]"); if (!el) return;
+  e.dataTransfer.setData("text/plain", resumenTexto(porUbigeo[el.dataset.u]));
+  e.dataTransfer.effectAllowed = "copy";
+});
+
+// Atajos de teclado
+document.addEventListener("keydown", e => {
+  const enCampo = e.target.matches("input, textarea");
+  if (e.key === "/" && !enCampo) { e.preventDefault(); $("#q").focus(); return; }
+  if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "k") { e.preventDefault(); $("#q").focus(); return; }
+  if (enCampo) return;
+  if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "c" && !String(getSelection())) {
+    e.preventDefault();
+    navigator.clipboard?.writeText(resumenTexto(porUbigeo[estado.u])).then(() => avisar("Resumen copiado"), () => avisar("No se pudo copiar"));
+    return;
+  }
+  if (e.key === "ArrowDown" || e.key === "ArrowUp") {
+    const orden = [...document.querySelectorAll("#lista .item")].map(b => b.dataset.u);
+    if (!orden.length) return;
+    e.preventDefault();
+    const i = orden.indexOf(estado.u);
+    const j = i < 0 ? 0 : Math.min(orden.length - 1, Math.max(0, i + (e.key === "ArrowDown" ? 1 : -1)));
+    seleccionar(orden[j]);
+    document.querySelector(`#lista [data-u="${orden[j]}"]`)?.scrollIntoView({ block: "nearest" });
+  }
+});
+
+const inicial = (location.hash || "").replace("#", "");
+if (porUbigeo[inicial]) estado.u = inicial;
+pintarLista(); pintarContenido();
+</script>

@@ -1,7 +1,8 @@
 """Ficha ciudadana: página web con un resumen en lenguaje claro por municipalidad.
 
-Uso (desde la raíz): .venv/bin/python scripts/ficha_ciudadana.py 09
-  → web/ficha_ciudadana/index.html (plantilla web/ficha_ciudadana/plantilla.html + datos incrustados)
+Uso (desde scripts/): ../.venv/bin/python ficha_ciudadana.py 09 [variante]
+  → web/ficha_ciudadana/index.html (plantilla.html + datos incrustados)
+  → con variante «mac»: index_mac.html desde plantilla_mac.html (prueba de diseño estilo app de macOS)
 
 Reutiliza los cálculos de sueldos_alcaldes, ranking_transparencia y senales_alerta. Solo agregados: no incluye
 nombres de personas (el cargo de alcalde se informa sin nombre).
@@ -41,7 +42,7 @@ def pte_resumen(ubigeo: str, periodo: str | None) -> dict | None:
     }
 
 
-def main(dep: str) -> None:
+def main(dep: str, variante: str = "") -> None:
     with (RAIZ / "database/seeds/renamu2026_personal.csv").open() as f:
         ren = {r["ubigeo"]: r for r in csv.DictReader(f)}
     mef: dict = defaultdict(float)
@@ -117,13 +118,15 @@ def main(dep: str) -> None:
         "publican": len(publican),
         "municipalidades": sorted(salida, key=lambda x: x["ubigeo"]),
     }
-    plantilla = (WEB / "plantilla.html").read_text(encoding="utf-8")
+    sufijo = f"_{variante}" if variante else ""
+    plantilla = (WEB / f"plantilla{sufijo}.html").read_text(encoding="utf-8")
     if plantilla.count(MARCA) != 1:
         raise SystemExit(f"la plantilla debe contener una vez {MARCA}")
     js = json.dumps(datos, ensure_ascii=False, separators=(",", ":")).replace("</", "<\\/")
-    (WEB / "index.html").write_text(plantilla.replace(MARCA, js), encoding="utf-8")
-    print(f"{WEB / 'index.html'}: {len(salida)} municipalidades")
+    destino = WEB / f"index{sufijo}.html"
+    destino.write_text(plantilla.replace(MARCA, js), encoding="utf-8")
+    print(f"{destino}: {len(salida)} municipalidades")
 
 
 if __name__ == "__main__":
-    main(sys.argv[1] if len(sys.argv) > 1 else "09")
+    main(sys.argv[1] if len(sys.argv) > 1 else "09", sys.argv[2] if len(sys.argv) > 2 else "")
