@@ -95,7 +95,7 @@ def puntaje(e: dict) -> dict[str, float]:
     }
 
 
-def main(dep: str) -> None:
+def calcular(dep: str):
     with (RAIZ / "database/seeds/municipalidades.csv").open() as f:
         munis = [r for r in csv.DictReader(f) if r["ubigeo"].startswith(dep)]
     with (RAIZ / f"database/seeds/pte_entidades_{dep}.csv").open() as f:
@@ -118,6 +118,11 @@ def main(dep: str) -> None:
     publican = sorted((f for f in filas if f[2]["periodos"]), key=lambda f: -f[0])
     no_publican = sorted((f for f in filas if not f[2]["periodos"]), key=lambda f: -personal_2025[f[1]["ubigeo"]])
 
+    return filas, publican, no_publican, personal_2025, pte_ids
+
+
+def main(dep: str) -> None:
+    filas, publican, no_publican, personal_2025, pte_ids = calcular(dep)
     print("# Ranking de transparencia salarial: municipalidades de Huancavelica\n")
     print(
         f"Generado con `scripts/ranking_transparencia.py {dep}`. Mide si cada municipalidad publica los salarios de su"

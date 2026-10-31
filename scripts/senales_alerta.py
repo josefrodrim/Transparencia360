@@ -65,7 +65,7 @@ def soles(x: float) -> str:
     return f"{x:,.0f}".replace(",", " ")
 
 
-def main(dep: str) -> None:
+def calcular(dep: str):
     with (RAIZ / "database/seeds/municipalidades.csv").open() as f:
         munis = [r for r in csv.DictReader(f) if r["ubigeo"].startswith(dep)]
     with (RAIZ / "database/seeds/renamu2026_personal.csv").open() as f:
@@ -126,6 +126,11 @@ def main(dep: str) -> None:
                     (m, f"locación {r['locacion_dic']} frente a {total} en planilla")
                 )
 
+    return munis, hallazgos
+
+
+def main(dep: str) -> None:
+    munis, hallazgos = calcular(dep)
     print("# Señales de alerta: gasto en personal de las municipalidades de Huancavelica\n")
     print(f"Generado con `scripts/senales_alerta.py {dep}` a partir del MEF (devengado, corte 22/10/2026), RENAMU 2026")
     print("(personal declarado al INEI) y el PTE (salarios publicados). **Una señal es un indicio para revisar, no una")

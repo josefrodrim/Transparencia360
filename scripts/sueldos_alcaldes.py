@@ -45,7 +45,7 @@ def pte_alcalde(ubigeo: str, slug_por_ubigeo: dict[str, str]) -> dict[str, float
     return out
 
 
-def main(dep: str) -> None:
+def calcular(dep: str):
     with (RAIZ / "database/seeds/municipalidades.csv").open() as f:
         munis = [r for r in csv.DictReader(f) if r["ubigeo"].startswith(dep)]
     mef: dict[str, dict] = {
@@ -74,6 +74,11 @@ def main(dep: str) -> None:
             mensual_26, mensual_25, fuente = pte_26, moda([t for p, t in pte.items() if p.startswith("2025")]), "PTE"
         filas.append((mensual_26, m, mensual_25, sum(v25), irregulares, pte_26, fuente))
 
+    return filas
+
+
+def main(dep: str) -> None:
+    filas = calcular(dep)
     print("# Compensación mensual de los alcaldes de Huancavelica\n")
     print(f"Generado con `scripts/sueldos_alcaldes.py {dep}`. Fuente principal: MEF, devengado mensual, específica")
     print("2.1.1.1.1.1 «Funcionarios elegidos por elección política» (corte 22/10/2026; 2026 = enero–septiembre).")
