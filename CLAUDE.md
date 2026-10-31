@@ -89,6 +89,11 @@ Hecho y en git:
   artifact privado https://claude.ai/artifact/JxnVH14t3GCoBYSZBotz7z. La web de la ONPE tiene CAPTCHA: no se evade;
   el estilo se ajusta con capturas que envíe el usuario.
 
+Pendientes propuestos (sesión 2026-10-31, el usuario cerró aquí):
+- Ajustar el tablero al estilo ONPE con capturas que envíe el usuario.
+- Ampliar el tablero a otros departamentos o a todo el país (`munilens-mef --departamento NN`).
+- Sumar la ejecución presupuestal a La Planilla Invisible; especial sobre la plata no gastada; obras paradas por provincia.
+
 Siguiente:
 - MEF devengado 2024–2026 extraído para las 102 municipalidades; tabla en `docs/mef_gasto_personal_huancavelica.md`
   (subconjuntos RAW en `data/raw/mef_gasto_devengado/09/`, regenerables).
