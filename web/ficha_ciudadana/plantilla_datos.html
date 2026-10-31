@@ -208,7 +208,8 @@ const soles = n => n == null ? "—" : "S/ " + Math.round(n).toLocaleString("es-
 const millones = n => n >= 1e6 ? "S/ " + (n / 1e6).toFixed(1).replace(".", ",").replace(",0", "") + " millones" : soles(n);
 const pct = (a, b) => Math.round(100 * a / b);
 const sinTildes = s => s.normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase();
-const corto = m => m.nombre.replace("Municipalidad Provincial de ", "la Provincial de ").replace("Municipalidad Distrital de ", "");
+const capital = m => m.tipo === "provincial" && m.distrito && m.distrito !== m.provincia ? ` (${m.distrito})` : "";
+const corto = m => m.nombre.replace("Municipalidad Provincial de ", "la Provincial de ").replace("Municipalidad Distrital de ", "") + capital(m);
 const titulo = m => { const c = corto(m); return c.charAt(0).toUpperCase() + c.slice(1); };
 const esc = s => String(s).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]);
 const MESES = ["enero", "febrero", "marzo", "abril", "mayo", "junio", "julio", "agosto", "septiembre", "octubre", "noviembre", "diciembre"];
@@ -304,7 +305,7 @@ let res = [], sel = -1;
 function buscar() {
   const q = sinTildes($("#q").value.trim()), lista = $("#sugerencias");
   if (!q) { lista.hidden = true; res = []; return; }
-  res = M.filter(m => sinTildes(m.nombre).includes(q) || sinTildes(m.provincia).includes(q) || m.ubigeo.startsWith(q)).slice(0, 12);
+  res = M.filter(m => sinTildes(m.nombre).includes(q) || sinTildes(m.provincia).includes(q) || sinTildes(m.distrito || "").includes(q) || m.ubigeo.startsWith(q)).slice(0, 12);
   sel = res.length ? 0 : -1;
   lista.innerHTML = res.length ? res.map((m, i) => `<li><button type="button" role="option" data-u="${m.ubigeo}" aria-selected="${i === 0}">${esc(titulo(m))}<small>${esc(m.provincia)}</small></button></li>`).join("")
     : `<li><button type="button" disabled>Sin coincidencias. Prueba con el nombre del distrito.</button></li>`;

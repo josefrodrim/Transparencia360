@@ -77,6 +77,7 @@ def main(dep: str, variante: str = "") -> None:
                 "nombre": m["nombre"],
                 "tipo": m["tipo"].lower(),
                 "provincia": m["provincia"],
+                "distrito": m["distrito"],
                 "alcalde": {"mensual": round(al[0]), "anual_2025": round(al[3]), "fuente": al[6]},
                 "gasto_2025": g,
                 "variacion_2026": round(100 * (p26s / p25s - 1)) if p25s else None,

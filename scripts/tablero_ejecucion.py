@@ -44,6 +44,7 @@ def main(dep: str) -> None:
                 "u": u,
                 "n": m["nombre"],
                 "p": m["provincia"],
+                "d": m["distrito"],
                 "t": m["tipo"].lower(),
                 "a": por_anio,
                 "o": [

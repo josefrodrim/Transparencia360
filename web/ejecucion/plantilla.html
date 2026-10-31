@@ -239,6 +239,8 @@ const miles = s => s.replace(/\B(?=(\d{3})+(?!\d))/g, " ");
 const mill = n => { const a = Math.abs(n); if (a >= 1e6) { const [e, d] = (n / 1e6).toFixed(1).split("."); return "S/ " + miles(e) + "," + d + " M"; } return a >= 1e3 ? "S/ " + Math.round(n / 1e3) + " mil" : soles(n); };
 const pctTxt = p => p == null ? "—" : p.toFixed(1).replace(".", ",") + " %";
 const corto = n => n.replace("Municipalidad Provincial de ", "Provincial de ").replace("Municipalidad Distrital de ", "");
+// Las provinciales cuya capital no lleva el nombre de la provincia (Lircay, Pampas) se rotulan con la capital.
+D.munis.forEach(m => { const c = corto(m.n); m.etq = m.t === "provincial" && m.d && m.d !== m.p ? `${m.d} (${c})` : c; });
 const [U1, U2, U3] = D.umbrales.semaforo;
 const COLORES = { verde: "var(--verde)", amarillo: "var(--amarillo)", naranja: "var(--naranja)", rojo: "var(--rojo)" };
 const semaforo = p => p >= U1 ? "verde" : p >= U2 ? "amarillo" : p >= U3 ? "naranja" : "rojo";
@@ -254,8 +256,8 @@ $("#f-anio").innerHTML = [...D.anios].reverse().map(a => `<option value="${a}">$
 const provs = [...new Set(D.munis.map(m => m.p))].sort((a, b) => a.localeCompare(b, "es"));
 $("#f-prov").innerHTML = `<option value="">Todo el departamento</option>` + provs.map(p => `<option>${esc(p)}</option>`).join("");
 function opcionesMuni() {
-  const lista = D.munis.filter(m => !est.prov || m.p === est.prov).sort((a, b) => corto(a.n).localeCompare(corto(b.n), "es"));
-  $("#f-muni").innerHTML = `<option value="">Todas</option>` + lista.map(m => `<option value="${m.u}">${esc(corto(m.n))}</option>`).join("");
+  const lista = D.munis.filter(m => !est.prov || m.p === est.prov).sort((a, b) => a.etq.localeCompare(b.etq, "es"));
+  $("#f-muni").innerHTML = `<option value="">Todas</option>` + lista.map(m => `<option value="${m.u}">${esc(m.etq)}</option>`).join("");
   $("#f-muni").value = est.muni;
 }
 
@@ -268,7 +270,7 @@ function sumar(munis, anio) {
 const enCurso = () => +est.anio === D.en_curso;
 const ejec = t => t.pim > 0 ? 100 * (enCurso() ? t.sep : t.dev) / t.pim : null;
 const ambito = () => D.munis.filter(m => (!est.prov || m.p === est.prov) && (!est.muni || m.u === est.muni));
-const nombreAmbito = () => est.muni ? corto(D.munis.find(m => m.u === est.muni).n) : est.prov ? "Provincia de " + est.prov : "Departamento de Huancavelica";
+const nombreAmbito = () => est.muni ? D.munis.find(m => m.u === est.muni).etq : est.prov ? "Provincia de " + est.prov : "Departamento de Huancavelica";
 
 function pintar() {
   const anio = +est.anio, mm = ambito(), t = sumar(mm, anio), p = ejec(t);
@@ -295,7 +297,7 @@ function pintar() {
   $("#t-conteo-txt").textContent = est.muni ? "Resultado de la municipalidad" : `Resultados por municipalidad (${filas.length})`;
   $("#conteo").innerHTML = filas.length ? filas.map((f, i) => `<li><button type="button" data-u="${f.m.u}">
       <span class="pos">${i + 1}</span>
-      <span class="nom"><span class="chip" style="background:${COLORES[semaforo(f.p)]}"></span><strong>${esc(corto(f.m.n))}</strong><em>${esc(f.m.p)}</em></span>
+      <span class="nom"><span class="chip" style="background:${COLORES[semaforo(f.p)]}"></span><strong>${esc(f.m.etq)}</strong><em>${esc(f.m.p)}</em></span>
       <span class="pct" style="color:${COLORES[semaforo(f.p)]}">${pctTxt(f.p)}</span>
       <span class="pista"><span style="width:${Math.min(100, f.p)}%;background:${COLORES[semaforo(f.p)]}"></span></span>
       <span class="det">${mill(f.g)} de ${mill(f.pim)} · sin gastar ${mill(f.pim - f.g)}</span></button></li>`).join("")
@@ -370,7 +372,7 @@ function pintarObras(mm, anio) {
   obras.sort((a, b) => b.o[4] - a.o[4]);
   const cerrado = D.cerrados.includes(anio);
   $("#obras-sub").textContent = cerrado ? `${anio} · ${obras.length} proyecto${obras.length === 1 ? "" : "s"} con ≥ S/ 200 mil y ≤ 10 % de avance` : `${anio} aún no cierra: elige un año cerrado`;
-  $("#obras").innerHTML = obras.length ? obras.map(({ m, o }) => `<tr><td>${esc(corto(m.n))}</td><td class="n">${esc(o[1])}</td>
+  $("#obras").innerHTML = obras.length ? obras.map(({ m, o }) => `<tr><td>${esc(m.etq)}</td><td class="n">${esc(o[1])}</td>
       <td class="proy">${esc(o[2])}${o[6] ? '<span class="insignia">Varios años</span>' : ""}</td><td>${esc(D.funciones[o[3]].toLowerCase())}</td>
       <td class="n">${mill(o[4])}</td><td class="n">${pctTxt(o[5])}</td></tr>`).join("")
     : `<tr><td colspan="6" class="vacio">${cerrado ? "No hay obras paradas con estos criterios." : "Las obras paradas se miden al cierre del año."}</td></tr>`;
