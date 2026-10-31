@@ -72,7 +72,8 @@ Hecho y en git:
 - RENAMU 2026 (personal por régimen, 1 892 municipalidades): `munilens-renamu` → `database/seeds/renamu2026_personal.csv`.
   Promedio CAS = MEF ÷ RENAMU no es fiable (ver `docs/fuentes-huancavelica.md` §4.3).
 - Ranking de transparencia: `docs/ranking_transparencia_huancavelica.md` con `scripts/ranking_transparencia.py 09`.
-- En curso (pedido del usuario): señales de alerta y luego ficha ciudadana por municipalidad.
+- Señales de alerta: `docs/senales_alerta_huancavelica.md` con `scripts/senales_alerta.py 09` (indicios, no pruebas).
+- En curso (pedido del usuario): ficha ciudadana por municipalidad (junta sueldos, ranking y alertas).
 
 Siguiente:
 - MEF devengado 2024–2026 extraído para las 102 municipalidades; tabla en `docs/mef_gasto_personal_huancavelica.md`
