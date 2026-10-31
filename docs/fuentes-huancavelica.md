@@ -168,6 +168,33 @@
   confianza designados sin convocatoria, por eso su sueldo solo aparece en el PTE (S/ 3 000–4 000 en 2024). El OCR
   confunde a veces el 1 con el 4 (p. ej., «4 500» para un policía municipal): validar contra el PDF antes de usar.
 
+## 4.3 INEI — RENAMU microdatos: personal por régimen (VERIFICADO, en uso)
+
+| Atributo | Valor |
+|---|---|
+| Portal | https://proyectos.inei.gob.pe/microdatos/ → Consulta por encuestas → «Registro Nacional de Municipalidades - RENAMU» (2004–2026) |
+| Descarga | `https://proyectos.inei.gob.pe/iinei/srienaho/descarga/CSV/1049-Modulo1963.zip` (edición 2026), pública y sin registro. El ZIP trae un CSV `;` UTF-8 con BOM y un diccionario PDF |
+| Extractor | `munilens-renamu --anio 2026 --encuesta 1049 --modulo 1963` → `database/seeds/renamu2026_personal.csv` (+ `.meta.json`) |
+
+- 1 892 municipalidades. Pregunta 19: personal **declarado por la municipalidad** al 31/12/2025 y al 31/03/2026, por
+  régimen (276 nombrado y contratado, 728, CAS), funcionarios y locación / orden de servicios. Solo conteos, sin datos
+  personales. Las celdas vacías vienen como `#¡NULO!`.
+- En Huancavelica, 6 municipalidades declaran «no tiene personal» aunque el MEF les registra planilla (señal de
+  alerta, no un error del extractor).
+- **Estimar el sueldo CAS promedio (gasto CAS del MEF ÷ CAS declarados) NO es fiable.** Contraste con el PTE
+  (oct–dic 2025):
+
+  | Municipalidad | CAS en RENAMU | Estimado | Promedio CAS en el PTE |
+  |---|---|---|---|
+  | MP Huancavelica | 352 | S/ 1 115 | S/ 1 792 (208 personas) |
+  | Ascensión | 62 | S/ 1 313 | S/ 2 023–2 379 (39–41) |
+  | Acobamba | 83 | S/ 1 740 | S/ 1 332 (65) |
+  | San Antonio de Antaparco | 10 | S/ 1 900 | S/ 1 741–2 240 (10–11) |
+
+  RENAMU cuenta a todo el personal CAS, incluido el que se paga con proyectos de inversión (genérica 2.6), mientras
+  que la partida CAS del MEF (2.1.1.13) solo incluye el gasto corriente. Con el conteo del PTE (208), la MP
+  Huancavelica da S/ 1 887, cerca de lo publicado. Usar como rango orientativo y no como dato.
+
 ## 5. Pendientes de verificar
 
 | Fuente | URL candidata | Estado |
@@ -177,3 +204,4 @@
 | Web institucional MPH | https://www.munihuancavelica.gob.pe/es/ | Sin verificar |
 | Datos Abiertos | https://www.datosabiertos.gob.pe/ | No se encontró ningún dataset de planillas municipales de Huancavelica |
 | INEI — población por distrito | — | Pendiente (para indicadores per cápita) |
+| MEF — CAS pagado con proyectos de inversión (genérica 2.6) | devengado mensual | Pendiente: completaría el gasto CAS para cruzarlo con RENAMU |

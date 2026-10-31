@@ -1,0 +1,12 @@
+{
+  "fuente": "INEI - Registro Nacional de Municipalidades (RENAMU), formulario F01, pregunta 19",
+  "portal": "https://proyectos.inei.gob.pe/microdatos/",
+  "url_archivo": "https://proyectos.inei.gob.pe/iinei/srienaho/descarga/CSV/1049-Modulo1963.zip",
+  "archivo_csv": "Base_de_Datos_F01_RENAMU2026.csv",
+  "sha256_archivo": "2e3a206e9c4c2229175192fc98a084877bb1e7fd49a6630d5e9fcc09f540cd2f",
+  "edicion": 2026,
+  "corte_dic": "2025-12-31",
+  "corte_mar": "2026-03-31",
+  "municipalidades": 1892,
+  "nota": "Conteos declarados por cada municipalidad al INEI; *_dic al 31 de diciembre del año anterior."
+}
