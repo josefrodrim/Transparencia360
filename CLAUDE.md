@@ -89,10 +89,36 @@ Hecho y en git:
   artifact privado https://claude.ai/artifact/JxnVH14t3GCoBYSZBotz7z. La web de la ONPE tiene CAPTCHA: no se evade;
   el estilo se ajusta con capturas que envíe el usuario.
 
-Pendientes propuestos (sesión 2026-10-31, el usuario cerró aquí):
-- Ajustar el tablero al estilo ONPE con capturas que envíe el usuario.
-- Ampliar el tablero a otros departamentos o a todo el país (`munilens-mef --departamento NN`).
-- Sumar la ejecución presupuestal a La Planilla Invisible; especial sobre la plata no gastada; obras paradas por provincia.
+## Tareas pendientes (lista acordada con el usuario el 2026-10-31)
+
+Tablero de ejecución presupuestal:
+1. Ajustar el diseño al estilo ONPE con capturas del usuario (su web tiene CAPTCHA: no se evade).
+2. Ampliar a otros departamentos o a todo el país (`munilens-mef --departamento NN`).
+3. Revisar en celular y corregir lo que se vea mal.
+
+Análisis:
+4. Sumar la ejecución presupuestal a la ficha ciudadana (La Planilla Invisible).
+5. Especial sobre la plata no gastada y lo que revierte al Tesoro.
+6. Obras paradas por provincia y las que se repiten varios años.
+7. Confirmar la regla de reversión de recursos ordinarios con la directiva de cierre vigente del MEF
+   (hoy respaldada por comunicados 013-2020-EF/52.06 y 030-2023-EF/50.01).
+8. Completar el gasto CAS con lo pagado desde proyectos de inversión (genérica 2.6) para que el promedio
+   MEF ÷ RENAMU sea fiable.
+
+Datos y fuentes:
+9. Población por distrito del Censo 2025 para el gasto por habitante (solo en REDATAM; opción: que el usuario
+   exporte la tabla).
+10. Revisar a mano los 7 cruces PTE pendientes (Cosme 090511 y distritos nuevos de Tayacaja).
+11. Verificar en el PDF las cifras OCR de las convocatorias CAS (el OCR confunde 1 con 4).
+
+Plan técnico (`docs/plan.md`):
+12. Fase 3: PostgreSQL. 13. Fase 4: FastAPI. 14. Fase 5: Next.js. 15. CI con GitHub Actions.
+
+Diseño:
+16. Elegir la versión principal de la ficha (favorita: periodismo de datos; Mac descartada).
+17. Decidir si se desinstala el skill `macos-design` (no se usó).
+
+Próximo proyecto (app iOS): equipo multiagente (Claude PM + seguridad, Codex dev, Qwen docs).
 
 Siguiente:
 - MEF devengado 2024–2026 extraído para las 102 municipalidades; tabla en `docs/mef_gasto_personal_huancavelica.md`
