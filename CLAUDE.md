@@ -64,6 +64,9 @@ Hecho y en git:
 - El lector repara registros partidos en varias líneas (`fila_reparada`); `validate` marca `monto_atipico`
   (> 10× la mediana y > S/ 30 000) solo para revisión.
 
+- Perfil de Angaraes (0903): `docs/perfil_angaraes.md`, generado con `scripts/perfil_provincia.py 0903` (cruza
+  PTE con MEF; solo agregados). Sirve para cualquier provincia (`0901`, `0907`...).
+
 Siguiente:
 - MEF devengado 2024–2026 extraído para las 102 municipalidades; tabla en `docs/mef_gasto_personal_huancavelica.md`
   (subconjuntos RAW en `data/raw/mef_gasto_devengado/09/`, regenerables).
