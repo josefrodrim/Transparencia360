@@ -64,6 +64,15 @@ h1, h2, h3 { margin: 0; font-family: var(--f-cond); font-weight: 700; text-wrap:
 .filtros select { font: 500 0.95rem var(--f-base); color: var(--tinta); background: var(--hoja); border: 0; border-radius: 4px; padding: 0.45rem 0.6rem; max-width: 100%; }
 #f-muni { min-width: 0; width: 16rem; max-width: 100%; }
 
+.ruta { display: flex; flex-wrap: wrap; align-items: center; gap: 0.3rem 0.5rem; font-size: 0.92rem; }
+.ruta button { font: inherit; color: var(--banda); background: none; border: 0; padding: 0.15rem 0; cursor: pointer; text-decoration: underline; text-underline-offset: 3px; }
+.ruta [aria-current="page"] { font-weight: 700; color: var(--tinta); }
+.ruta .sep { color: var(--gris); }
+.ruta .nivel { font: 700 0.7rem var(--f-cond); letter-spacing: 0.08em; text-transform: uppercase; color: var(--gris); margin-right: 0.25rem; }
+.vistas { display: flex; gap: 0; border: 1px solid var(--linea); border-radius: 4px; overflow: hidden; }
+.vistas button { font: 500 0.8rem var(--f-base); border: 0; background: var(--hoja); color: var(--tinta); padding: 0.35rem 0.7rem; cursor: pointer; }
+.vistas button[aria-pressed="true"] { background: var(--banda-2); color: var(--banda-texto); }
+.controles { display: flex; flex-wrap: wrap; gap: 0.5rem; }
 main.interior { display: grid; gap: 1.25rem; padding-block: 1.25rem 3rem; }
 .panel { background: var(--hoja); border: 1px solid var(--linea); border-radius: 6px; padding: 1rem 1.15rem; min-width: 0; }
 .panel > h2 { font-size: 1.1rem; text-transform: uppercase; letter-spacing: 0.03em; border-bottom: 2px solid var(--banda); padding-bottom: 0.45rem; margin-bottom: 0.85rem; display: flex; justify-content: space-between; gap: 1rem; flex-wrap: wrap; align-items: baseline; }
@@ -168,12 +177,14 @@ td.proy { min-width: 18rem; }
 <nav class="filtros" aria-label="Filtros">
   <div class="interior">
     <label for="f-anio">Año fiscal<select id="f-anio"></select></label>
-    <label for="f-prov">Ámbito<select id="f-prov"></select></label>
-    <label for="f-muni">Municipalidad<select id="f-muni"></select></label>
+    <label for="f-dep">Departamento<select id="f-dep"></select></label>
+    <label for="f-prov">Provincia<select id="f-prov"></select></label>
+    <label for="f-muni">Municipalidad (distrito)<select id="f-muni"></select></label>
   </div>
 </nav>
 
 <main class="interior">
+  <nav class="ruta" id="ruta" aria-label="Ámbito seleccionado"></nav>
   <section class="panel avance" aria-labelledby="t-avance">
     <div class="avance-cab">
       <div><div class="etq" id="t-avance">Presupuesto ejecutado</div><div class="pct" id="pct"></div></div>
@@ -188,7 +199,8 @@ td.proy { min-width: 18rem; }
   <div class="dos">
     <section class="panel" aria-labelledby="t-conteo">
       <h2 id="t-conteo"><span id="t-conteo-txt">Resultados por municipalidad</span>
-        <span class="orden" role="group" aria-label="Orden"><button type="button" data-orden="asc" aria-pressed="true">Menos ejecutan</button><button type="button" data-orden="desc" aria-pressed="false">Más ejecutan</button></span></h2>
+        <span class="controles"><span class="vistas" id="vistas" role="group" aria-label="Nivel"><button type="button" data-vista="prov" aria-pressed="true">Por provincia</button><button type="button" data-vista="munis" aria-pressed="false">Todas las municipalidades</button></span>
+        <span class="orden" role="group" aria-label="Orden"><button type="button" data-orden="asc" aria-pressed="true">Menos ejecutan</button><button type="button" data-orden="desc" aria-pressed="false">Más ejecutan</button></span></span></h2>
       <ol class="conteo" id="conteo"></ol>
     </section>
     <div class="lado">
@@ -248,16 +260,18 @@ const MES = ["", "enero", "febrero", "marzo", "abril", "mayo", "junio", "julio",
 const [ca, cm, cd] = D.corte.split("-");
 $("#corte").textContent = `Datos al ${+cd} de ${MES[+cm]} de ${ca} · ${D.anios[0]}–${D.en_curso}`;
 
-const est = { anio: D.cerrados[D.cerrados.length - 1], prov: "", muni: "", orden: "asc" };
+const est = { anio: D.cerrados[D.cerrados.length - 1], prov: "", muni: "", orden: "asc", vista: "prov" };
 try { const h = location.hash.replace("#", ""); if (/^\d{6}$/.test(h) && D.munis.some(m => m.u === h)) { est.muni = h; est.prov = D.munis.find(m => m.u === h).p; } } catch (e) {}
 
 // Filtros
 $("#f-anio").innerHTML = [...D.anios].reverse().map(a => `<option value="${a}">${a}${a === D.en_curso ? " (en curso)" : ""}</option>`).join("");
 const provs = [...new Set(D.munis.map(m => m.p))].sort((a, b) => a.localeCompare(b, "es"));
-$("#f-prov").innerHTML = `<option value="">Todo el departamento</option>` + provs.map(p => `<option>${esc(p)}</option>`).join("");
+$("#f-dep").innerHTML = `<option value="">${esc(D.departamento)}</option>`;
+$("#f-prov").innerHTML = `<option value="">Todas las provincias</option>` + provs.map(p => `<option>${esc(p)}</option>`).join("");
 function opcionesMuni() {
   const lista = D.munis.filter(m => !est.prov || m.p === est.prov).sort((a, b) => a.etq.localeCompare(b.etq, "es"));
-  $("#f-muni").innerHTML = `<option value="">Todas</option>` + lista.map(m => `<option value="${m.u}">${esc(m.etq)}</option>`).join("");
+  $("#f-muni").disabled = !est.prov;
+  $("#f-muni").innerHTML = `<option value="">${est.prov ? "Todas las municipalidades" : "Elige primero una provincia"}</option>` + lista.map(m => `<option value="${m.u}">${esc(m.etq)}</option>`).join("");
   $("#f-muni").value = est.muni;
 }
 
@@ -291,10 +305,23 @@ function pintar() {
     <div class="tarjeta alerta"><span>Revierte al Tesoro</span><b>${enCurso() ? "—" : mill(t.ro)}</b><small>recursos ordinarios no ejecutados</small></div>
     <div class="tarjeta"><span>Obras e inversión</span><b>${pctTxt(enCurso() ? null : pinv)}</b><small>${enCurso() ? "se mide al cierre" : "ejecución de la genérica 2.6"}</small></div>`;
 
-  // Conteo por municipalidad
+  // Conteo del nivel siguiente: departamento → provincias (o todas las municipalidades), provincia → municipalidades
   const filas = mm.map(m => { const r = m.a[anio]; if (!r) return null; const v = r.v; const g = enCurso() ? v[5] : v[1]; return { m, pim: v[0], g, p: v[0] > 0 ? 100 * g / v[0] : 0 }; }).filter(Boolean)
     .sort((a, b) => est.orden === "asc" ? a.p - b.p : b.p - a.p);
-  $("#t-conteo-txt").textContent = est.muni ? "Resultado de la municipalidad" : `Resultados por municipalidad (${filas.length})`;
+  const nivelDep = !est.prov && !est.muni;
+  $("#vistas").hidden = !nivelDep;
+  if (nivelDep && est.vista === "prov") {
+    const pf = provs.map(pr => { const tt = sumar(D.munis.filter(m => m.p === pr), anio); const g = enCurso() ? tt.sep : tt.dev; return { pr, pim: tt.pim, g, n: tt.n, p: tt.pim > 0 ? 100 * g / tt.pim : 0 }; })
+      .sort((a, b) => est.orden === "asc" ? a.p - b.p : b.p - a.p);
+    $("#t-conteo-txt").textContent = `Resultados por provincia (${pf.length})`;
+    $("#conteo").innerHTML = pf.map((f, i) => `<li><button type="button" data-prov="${esc(f.pr)}">
+      <span class="pos">${i + 1}</span>
+      <span class="nom"><span class="chip" style="background:${COLORES[semaforo(f.p)]}"></span><strong>Provincia de ${esc(f.pr)}</strong><em>${f.n} municipalidades ›</em></span>
+      <span class="pct" style="color:${COLORES[semaforo(f.p)]}">${pctTxt(f.p)}</span>
+      <span class="pista"><span style="width:${Math.min(100, f.p)}%;background:${COLORES[semaforo(f.p)]}"></span></span>
+      <span class="det">${mill(f.g)} de ${mill(f.pim)} · sin gastar ${mill(f.pim - f.g)}</span></button></li>`).join("");
+  } else {
+  $("#t-conteo-txt").textContent = est.muni ? "Resultado de la municipalidad" : est.prov ? `Municipalidades de ${est.prov} (${filas.length})` : `Todas las municipalidades (${filas.length})`;
   $("#conteo").innerHTML = filas.length ? filas.map((f, i) => `<li><button type="button" data-u="${f.m.u}">
       <span class="pos">${i + 1}</span>
       <span class="nom"><span class="chip" style="background:${COLORES[semaforo(f.p)]}"></span><strong>${esc(f.m.etq)}</strong><em>${esc(f.m.p)}</em></span>
@@ -302,6 +329,8 @@ function pintar() {
       <span class="pista"><span style="width:${Math.min(100, f.p)}%;background:${COLORES[semaforo(f.p)]}"></span></span>
       <span class="det">${mill(f.g)} de ${mill(f.pim)} · sin gastar ${mill(f.pim - f.g)}</span></button></li>`).join("")
     : `<li class="vacio">Sin presupuesto registrado en ${anio}.</li>`;
+  }
+  pintarRuta();
 
   // Semáforo (donut)
   const cuenta = { verde: 0, amarillo: 0, naranja: 0, rojo: 0 };
@@ -378,14 +407,35 @@ function pintarObras(mm, anio) {
     : `<tr><td colspan="6" class="vacio">${cerrado ? "No hay obras paradas con estos criterios." : "Las obras paradas se miden al cierre del año."}</td></tr>`;
 }
 
+function pintarRuta() {
+  const m = est.muni ? D.munis.find(x => x.u === est.muni) : null;
+  const pasos = [["dep", "Departamento", D.departamento]];
+  if (est.prov) pasos.push(["prov", "Provincia", est.prov]);
+  if (m) pasos.push(["muni", m.t === "provincial" ? "Municipalidad provincial" : "Municipalidad distrital", m.etq]);
+  $("#ruta").innerHTML = pasos.map(([k, nivel, nom], i) => (i ? '<span class="sep" aria-hidden="true">›</span>' : "") +
+    (i === pasos.length - 1 ? `<span aria-current="page"><span class="nivel">${nivel}</span>${esc(nom)}</span>`
+      : `<button type="button" data-ir="${k}"><span class="nivel">${nivel}</span>${esc(nom)}</button>`)).join("");
+  $("#f-prov").value = est.prov; $("#f-muni").value = est.muni;
+}
+function irA(prov, muni) {
+  est.prov = prov; est.muni = muni; $("#f-prov").value = prov; opcionesMuni();
+  try { history.replaceState(null, "", muni ? "#" + muni : location.pathname); } catch (er) {}
+  pintar();
+}
+
 // Eventos
 $("#f-anio").addEventListener("change", e => { est.anio = +e.target.value; pintar(); });
-$("#f-prov").addEventListener("change", e => { est.prov = e.target.value; est.muni = ""; opcionesMuni(); pintar(); });
+$("#f-prov").addEventListener("change", e => irA(e.target.value, ""));
 $("#f-muni").addEventListener("change", e => { est.muni = e.target.value; try { history.replaceState(null, "", est.muni ? "#" + est.muni : location.pathname); } catch (er) {} pintar(); });
 document.querySelectorAll(".orden button").forEach(b => b.addEventListener("click", () => {
   est.orden = b.dataset.orden; document.querySelectorAll(".orden button").forEach(x => x.setAttribute("aria-pressed", x === b)); pintar();
 }));
-$("#conteo").addEventListener("click", e => { const b = e.target.closest("[data-u]"); if (!b) return; const m = D.munis.find(x => x.u === b.dataset.u);
+$("#ruta").addEventListener("click", e => { const b = e.target.closest("[data-ir]"); if (!b) return; if (b.dataset.ir === "dep") irA("", ""); else irA(est.prov, ""); });
+document.querySelectorAll("#vistas button").forEach(b => b.addEventListener("click", () => {
+  est.vista = b.dataset.vista; document.querySelectorAll("#vistas button").forEach(x => x.setAttribute("aria-pressed", x === b)); pintar();
+}));
+$("#conteo").addEventListener("click", e => { const bp = e.target.closest("[data-prov]"); if (bp) { irA(bp.dataset.prov, ""); return; }
+  const b = e.target.closest("[data-u]"); if (!b) return; const m = D.munis.find(x => x.u === b.dataset.u);
   est.prov = m.p; est.muni = m.u; $("#f-prov").value = m.p; opcionesMuni(); try { history.replaceState(null, "", "#" + m.u); } catch (er) {} pintar(); window.scrollTo({ top: 0, behavior: "smooth" }); });
 $("#provincias").addEventListener("click", e => { const b = e.target.closest("[data-prov]"); if (!b) return;
   est.prov = est.prov === b.dataset.prov ? "" : b.dataset.prov; est.muni = ""; $("#f-prov").value = est.prov; opcionesMuni(); pintar(); });
