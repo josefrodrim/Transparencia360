@@ -133,6 +133,19 @@
   el mes de pago. Ascensión (+64 %) y Acobamba (+45 %) muestran la misma diferencia.
 - Son montos agregados por municipalidad: no identifican personas.
 
+## 4.1 Directorios de funcionarios en gob.pe (VERIFICADO para Lircay, uso manual)
+
+- La ficha PTE de cada entidad puede enlazar a un directorio publicado en gob.pe. MP Angaraes (id 11921) enlaza
+  `https://www.gob.pe/institucion/muniangaraes/informes-publicaciones/5721517-directorio-de-la-mpal-2025` (página
+  titulada «Directorio de la MPAL - 2026»): un DOCX con 34 cargos de gerencias y subgerencias, y un PDF con el
+  alcalde y 9 regidores.
+- **Sirve para saber quién ocupa cada cargo, pero no trae salarios.** Se cruza por nombre con el PTE Personal.
+- **Contiene datos personales sensibles** (DNI, celulares, correos personales y domicilios de las autoridades). Solo se
+  toman el nombre y el cargo; los archivos descargados no se guardan y nunca se versionan.
+- Cruce de Lircay (2026-10-31): de las 27 personas del directorio (34 cargos), 6 coinciden por nombre con alguien publicado en el
+  PTE de 2024 (S/ 3 000–4 000 mensuales, CAS); los demás, incluidos el gerente municipal y el alcalde, nunca
+  aparecieron en el PTE.
+
 ## 5. Pendientes de verificar
 
 | Fuente | URL candidata | Estado |
