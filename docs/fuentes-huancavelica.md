@@ -146,6 +146,28 @@
   PTE de 2024 (S/ 3 000–4 000 mensuales, CAS); los demás, incluidos el gerente municipal y el alcalde, nunca
   aparecieron en el PTE.
 
+## 4.2 Remuneración de autoridades y convocatorias CAS (VERIFICADO para Lircay)
+
+- **Alcalde:** su compensación la fija el Estado, no el concejo (Ley 30057 art. 52; **D.S. 413-2019-EF**, montos por
+  municipalidad desde enero de 2020). MP Angaraes: **S/ 7 500 mensuales**, citado en el Acuerdo de Concejo
+  N° 113-2023-MPAL-CM y confirmado en el MEF: específica «Funcionarios elegidos por elección política», S/ 7 500
+  devengados cada mes de 2025 y de 2026.
+- **Regidores:** dietas fijadas por el concejo en el primer trimestre de la gestión, como máximo 4 al mes y en total
+  hasta el 30 % de los ingresos del alcalde (Ley 28212 / LOM art. 12). En Lircay, el Acuerdo 113-2023 fija el 30 % por
+  dos sesiones al mes desde abril de 2023 (el texto dice S/ 2 225, pero el 30 % de 7 500 es 2 250). En el MEF se
+  devengan S/ 20 250 al mes = 9 regidores × S/ 2 250.
+- **Funcionarios de alta dirección** (MEF 2.1.1.1.7): S/ 7 200 al mes en Lircay. No identifica a la persona.
+- **Normas en gob.pe:** `gob.pe/institucion/<slug>/normas-legales/<id>` agrupa compendios anuales por tipo. El
+  parámetro `term` no filtra. Los acuerdos son PDF escaneados (requieren OCR).
+- **Convocatorias CAS:** en `gob.pe/institucion/<slug>/informes-publicaciones` («Convocatoria CAS NNN-AAAA»). Bases
+  escaneadas con puesto y remuneración mensual, más resultados con los nombres de los ganadores. Lircay: 6
+  convocatorias en 2025 y 2 en 2026.
+- **Resultado del OCR de las 8 bases de Lircay (2025-01 → 2026-02):** solo hay puestos operativos y técnicos, por
+  S/ 1 200 (limpieza, guardianes, cuneteros), S/ 1 500 (serenos, tránsito), S/ 1 800–2 200 (asistentes, analistas)
+  y S/ 2 500–3 000 (ingenieros, especialistas). **Ningún cargo de gerente o subgerente sale a concurso:** son CAS de
+  confianza designados sin convocatoria, por eso su sueldo solo aparece en el PTE (S/ 3 000–4 000 en 2024). El OCR
+  confunde a veces el 1 con el 4 (p. ej., «4 500» para un policía municipal): validar contra el PDF antes de usar.
+
 ## 5. Pendientes de verificar
 
 | Fuente | URL candidata | Estado |
